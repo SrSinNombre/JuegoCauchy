@@ -37,13 +37,6 @@ public class GrafoNoPonderado<T> {
         arista.destino.verticesUnidos.delete(arista.origen);
     }
 
-    public boolean hayCiclos(){
-
-    }
-    private boolean hayCiclosRec(Vertice<T> v1, Vertice<T> v2){
-        Iterador<Vertice<T>> it = verticesTotales.getIterador();
-    }
-
     public Lista<Vertice<T>> recorrerEnProfundidad(){
         Lista<Vertice<T>> lista = new ListaBasica<>(1);
         recorrerEnProfundidadRec(primerVertice, lista);
