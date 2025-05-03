@@ -65,6 +65,17 @@ public class ListaBasica<T> implements Lista<T> {
             return it.contador;
         }
     }
+    public T get(int indice){
+        if(indice == 0) return array[0];
+        Iterador<T> it = getIterador();
+        int cont = 1;
+        T elemento = it.next();
+        while(cont != indice){
+            elemento = it.next();
+            cont++;
+        }
+        return elemento;
+    }
     public void sumar(ListaBasica<T> otraLista){
         while(maxElementos < numElementos + otraLista.numElementos){
             aumentarT();
@@ -88,6 +99,11 @@ public class ListaBasica<T> implements Lista<T> {
     }
     public boolean contains(T elemento){
         return buscar(elemento) != -1;
+    }
+    public T random(){
+        float a = (float) Math.random();
+        int n = Math.round(a*numElementos);
+        return get(n);
     }
 }
 
