@@ -64,5 +64,13 @@ public class ListaSE<T> implements Lista<T>{
     public boolean estaVacia(){
         return cabeza == null;
     }
+    public boolean contains(T elemento){
+        if(elemento == cabeza) return true;
+        Iterador<T> it = getIterador();
+        while(it.hasNext()){
+            if(it.next() == elemento) return true;
+        }
+        return false;
+    }
 }
 

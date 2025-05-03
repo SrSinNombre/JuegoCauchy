@@ -98,5 +98,13 @@ public class ListaDE<T> implements Lista<T> {
         cabeza = cola;
         cola = aux;
     }
+    public boolean contains(T elemento){
+        if(elemento == cabeza.getDato() || elemento == cola.getDato()) return true;
+        Iterador<T> it = getIterador();
+        while(it.next() != cola){
+            if(it.next() == elemento) return true;
+        }
+        return false;
+    }
 }
 
