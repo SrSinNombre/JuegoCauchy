@@ -1,9 +1,9 @@
 package Unidades;
 
 public class Unidades {
-    private int HP;
-    private int ataque;
-    private int defensa;
+    public int HP;
+    public int ataque;
+    public int defensa;
     private int rango_movimiento;
     private int rango_ataque;
 
@@ -15,24 +15,6 @@ public class Unidades {
         this.rango_ataque = rango_ataque;
     }
 
-    public int getHP() {
-        return HP;
-    }
-    public void setHP(int HP) {
-        this.HP = HP;
-    }
-    public int getAtaque() {
-        return ataque;
-    }
-    public void setAtaque(int ataque) {
-        this.ataque = ataque;
-    }
-    public int getDefensa() {
-        return defensa;
-    }
-    public void setDefensa(int defensa) {
-        this.defensa = defensa;
-    }
     public int getRango_movimiento() {
         return rango_movimiento;
     }
