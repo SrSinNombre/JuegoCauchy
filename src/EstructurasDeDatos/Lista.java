@@ -5,5 +5,6 @@ public interface Lista<T> {
     boolean delete(T elemento);
     Iterador<T> getIterador();
     int getNumElementos();
+    boolean contains(T elemento);
 }
 

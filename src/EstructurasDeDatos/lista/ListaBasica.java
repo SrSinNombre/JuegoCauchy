@@ -10,7 +10,7 @@ public class ListaBasica<T> implements Lista<T> {
     public ListaBasica(int maxElementos) {
         this.maxElementos = maxElementos;
         numElementos = 0;
-        array = (T[]) new Object[numElementos];
+        array = (T[]) new Object[maxElementos];
     }
     @Override
     public int getNumElementos(){
@@ -18,26 +18,19 @@ public class ListaBasica<T> implements Lista<T> {
     }
     @Override
     public boolean add(T elemento){
-        aumentarT(); //añade el elemento al final de la lista
+        aumentarT();
         array[numElementos] = elemento;
+        numElementos++;
         return true;
     }
 
     @Override
     public boolean delete(T elemento) {
-        T cabeza = array[0];
-        for(int i = 1; cabeza != elemento; i++) {
-            cabeza = array[i];
-            if (i == numElementos) {
-                System.out.println("El elemento no está en la lista");
-                return false;
-            }
+        int posicion = buscar(elemento);
+        if(posicion == -1) return false;
+        while(getIterador().hasNext()){
+            array[posicion] = array[posicion+1];
         }
-        cabeza = null;
-        for (int j = numElementos - 1; array[j] == null; j--){
-            array[j-1] = array[j];
-        }
-        numElementos -= 1;
         return true;
     }
     @Override
@@ -60,14 +53,14 @@ public class ListaBasica<T> implements Lista<T> {
         }
         return array_aux;
     }
-    public Object buscar(T elemento){
+    public int buscar(T elemento){
         IteradorListaBasica<T> it = new IteradorListaBasica<>();
         while(it.hasNext() && array[it.contador] != elemento){
             it.next();
         }
         if(!it.hasNext()){
             System.out.println("El elemento no está en la lista");
-            return null;
+            return -1;
         }else{
             return it.contador;
         }
@@ -92,6 +85,9 @@ public class ListaBasica<T> implements Lista<T> {
     }
     public void removeLast(){
         array[numElementos-1] = null;
+    }
+    public boolean contains(T elemento){
+        return buscar(elemento) != -1;
     }
 }
 
