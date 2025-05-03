@@ -7,7 +7,6 @@ public class Unidades {
     private int rango_movimiento;
     private int rango_ataque;
 
-    public Unidades() {}
     public Unidades(int HP, int ataque, int defensa, int rango_movimiento, int rango_ataque) {
         this.HP = HP;
         this.ataque = ataque;
@@ -15,6 +14,7 @@ public class Unidades {
         this.rango_movimiento = rango_movimiento;
         this.rango_ataque = rango_ataque;
     }
+
     public int getHP() {
         return HP;
     }
