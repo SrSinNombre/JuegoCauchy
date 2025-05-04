@@ -16,6 +16,10 @@ public class ListaSE<T> implements Lista<T>{
     @Override
     public boolean add(T elemento){
         Elemento<T> nuevoElemento = new Elemento<>(elemento);
+        if(estaVacia()) {
+            cabeza = nuevoElemento;
+            return true;
+        }
         Elemento<T> actual = cabeza;
         while(actual.getSiguiente() != null){
             actual = actual.getSiguiente();
@@ -45,9 +49,10 @@ public class ListaSE<T> implements Lista<T>{
     @Override
     public int getNumElementos(){
         int contador = 0;
-        while(cabeza != null){
+        Elemento<T> actual = cabeza;
+        while(actual != null){
             contador += 1;
-            cabeza = cabeza.getSiguiente();
+            actual = actual.getSiguiente();
         }
         return contador;
     }
@@ -64,6 +69,7 @@ public class ListaSE<T> implements Lista<T>{
     public boolean estaVacia(){
         return cabeza == null;
     }
+    @Override
     public boolean contains(T elemento){
         if(elemento == cabeza) return true;
         Iterador<T> it = getIterador();

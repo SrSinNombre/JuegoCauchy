@@ -2,8 +2,8 @@ package EstructurasDeDatos.arbolBinarioDeBusqueda;
 
 public class Nodo<T> {
     private T dato;
-    public Nodo<T> izquierdo;
-    public Nodo<T> derecho;
+    protected Nodo<T> izquierdo;
+    protected Nodo<T> derecho;
 
     Nodo(T dato) {
         this.dato = dato;

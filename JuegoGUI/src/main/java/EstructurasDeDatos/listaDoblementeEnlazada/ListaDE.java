@@ -34,9 +34,7 @@ public class ListaDE<T> implements Lista<T> {
         if(estaVacia()){
             cabeza = cola = new ElementoDoble<>(valor);
         }else{
-            ElementoDoble<T> siguiente = cola.getSiguiente();
-            siguiente = new ElementoDoble<>(valor);
-            cola = siguiente;
+            cola.setSiguiente(new ElementoDoble<>(valor));
         }
         return true;
     }
@@ -46,22 +44,18 @@ public class ListaDE<T> implements Lista<T> {
     }
     public void deleteCabeza(){
         cabeza = cabeza.getSiguiente();
-        ElementoDoble<T> anterior = cabeza.getAnterior();
-        anterior = null;
+        cabeza.setAnterior(null);
     }
     public void deleteCola(){
         cola = cola.getAnterior();
-        ElementoDoble<T> siguiente = cola.getSiguiente();
-        siguiente = null;
+        cola.setSiguiente(null);
     }
     @Override
     public boolean delete(T elemento) {
         if(!estaVacia()){
-            if (elemento == cola.getDato()) {
-                deleteCola();
-            } else if (elemento == cabeza.getDato()) {
-                deleteCabeza();
-            }
+            if (elemento == cola.getDato()) deleteCola();
+            else if (elemento == cabeza.getDato()) deleteCabeza();
+
             ElementoDoble<T> e = new ElementoDoble<>(elemento);
             ElementoDoble<T> actual = cabeza.getSiguiente();
             while(actual != e){
@@ -73,8 +67,7 @@ public class ListaDE<T> implements Lista<T> {
             } //busca el elemento a eliminar
             ElementoDoble<T> siguiente = actual.getSiguiente();
             while(siguiente.getAnterior() /*otra forma de llamar a actual*/ != cola){
-                ElementoDoble<T> anterior = siguiente.getAnterior();
-                anterior = siguiente;
+                siguiente.setAnterior(siguiente);
                 siguiente = siguiente.getSiguiente(); //en el primer bucle actual ya está sobrescrito, es decir, borrado
             }
             deleteCola();
@@ -98,6 +91,7 @@ public class ListaDE<T> implements Lista<T> {
         cabeza = cola;
         cola = aux;
     }
+    @Override
     public boolean contains(T elemento){
         if(elemento == cabeza.getDato() || elemento == cola.getDato()) return true;
         Iterador<T> it = getIterador();
