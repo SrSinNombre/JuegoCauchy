@@ -1,64 +1,61 @@
 package InicioPartida;
 import Unidades.*;
 import Tablero.*;
+import EstructurasDeDatos.lista.*;
 
 public class InicioPartida {
-    private Tablero tablero;
+    private Tablero tableroPartida;
     private int T;
 
-    public InicioPartida(Tablero tablero, int T) {
-        this.tablero = tablero;
+    public InicioPartida(Tablero tableroPartida, int T) {
+        this.tableroPartida = tableroPartida;
         this.T = T;
+    }
+    public void setTableroPartida(int largo, int alto){
+        tableroPartida = new Tablero(largo, alto);
     }
 
     public void Iniciar() {
-        ListaBasica<Unidades> listaCiencias = new ListaBasica(5);
-        ListaBasica<Unidades> listaLetras = new ListaBasica(5);
+        ListaBasica<Unidades> listaCiencias = new ListaBasica<>(5);
+        ListaBasica<Unidades> listaLetras = new ListaBasica<>(5);
 
-        Ciencias cienciasa = new Ciencias();
+        Ciencias ciencias = new Ciencias();
         Letras letras = new Letras();
 
-        listaCiencias.add(ciencias.quimico);
-        listaCiencias.add(ciencias.biologo);
-        listaCiencias.add(ciencias.matematico);
-        listaCiencias.add(ciencias.fisico);
-        listaCiencias.add(ciencias.ingeniero);
+        listaCiencias.add(ciencias.getQuimico());
+        listaCiencias.add(ciencias.getBiologo());
+        listaCiencias.add(ciencias.getMatematico());
+        listaCiencias.add(ciencias.getFisico());
+        listaCiencias.add(ciencias.getIngeniero());
 
-        listaLetras.add(letras.historiador);
-        listaLetras.add(letras.filologo);
-        listaLetras.add(letras.teologo);
-        listaletras.add(letras.tradutor);
-        listaLetras.add(letras.filosofo);
+        listaLetras.add(letras.getHistoriador());
+        listaLetras.add(letras.getFilologo());
+        listaLetras.add(letras.getTeologo());
+        listaLetras.add(letras.getTraductor());
+        listaLetras.add(letras.getFilosofo());
 
-        int maxX = tablero.getLargo() -1;
-        int maxY = tablero.getAlto() -1;
+        int maxX = tableroPartida.getLargo() -1;
+        int maxY = tableroPartida.getAlto() -1;
 
         colocarUnidad(listaCiencias.random(), 0, 0);
-        colocarUnidad(listaLetras.random(), maxX, 0);
+        colocarUnidad(listaCiencias.random(), maxX, 0);
         colocarUnidad(listaLetras.random(), 0, maxY);
-        colocarUnidad(listaCiencias.random(), maxX, maxY);
+        colocarUnidad(listaLetras.random(), maxX, maxY);
     }
 
-    public void colocarUnidad(Unidades unidad, int x, int y){
-        if(tablero.getTablero()[x][y] == null) {
-            tablero.getTablero()[x][y] = unidad;
+    public boolean colocarUnidad(Unidades unidad, int x, int y){
+        if(tableroPartida.tablero[x][y] == null) {
+            tableroPartida.tablero[x][y] = unidad;
+            return true;
         }
-        else {
-            System.out.println("Posición ya ocupada en (" + x + "," + y + ")");
-        }
+        else return false;
     }
-    public void generarYColocarUnidad(ListaBasica<Unidades> listaUnidades) {
+    public boolean generarYColocarUnidad(ListaBasica<Unidades> listaUnidades) {
         Unidades unidad = listaUnidades.random();
+        int x = Math.round((float) Math.random() * tableroPartida.getLargo());
+        int y = Math.round((float) Math.random() * tableroPartida.getAlto());
 
-        ListaBasica<Integer> numeros = new ListaBasica<>(10);
-        for (int i = 0; i <= 9; i++) {
-            numeros.add(i);
-        }
-
-        int x = numeros.random();
-        int y = numeros.random();
-
-        colocarUnidad(unidad, x, y);
+        return colocarUnidad(unidad, x, y);
     }
 }
 

@@ -1,16 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<?import javafx.scene.control.Button?>
-<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="org.example.juegogui.HelloController">
-  <padding>
-    <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
-  </padding>
 
-  <Label fx:id="welcomeText"/>
-  <Button text="Hello!" onAction="#onHelloButtonClick"/>
-</VBox>
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Button layoutX="400.0" layoutY="100.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="246.0" text="NUEVA PARTIDA" textFill="RED">
+         <font>
+            <Font name="Algerian" size="23.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <Button layoutX="400.0" layoutY="223.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="246.0" text="CARGAR PARTIDA" textFill="RED">
+         <font>
+            <Font name="Algerian" size="23.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <Button layoutX="400.0" layoutY="350.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="246.0" text="SALIR DEL JUEGO" textFill="RED">
+         <font>
+            <Font name="Algerian" size="23.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+   </children>
+</Pane>

@@ -4,7 +4,7 @@ import Unidades.*;
 public class Tablero {
     private int largo;
     private int alto;
-    private Unidades[][] tablero;
+    public Unidades[][] tablero;
 
     public Tablero(int largo, int alto){
         this.alto = alto;
