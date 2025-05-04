@@ -31,6 +31,7 @@ public class ListaBasica<T> implements Lista<T> {
         while(getIterador().hasNext()){
             array[posicion] = array[posicion+1];
         }
+        numElementos--;
         return true;
     }
     @Override
@@ -61,9 +62,7 @@ public class ListaBasica<T> implements Lista<T> {
         if(!it.hasNext()){
             System.out.println("El elemento no está en la lista");
             return -1;
-        }else{
-            return it.contador;
-        }
+        }else return it.contador;
     }
     public T get(int indice){
         if(indice == 0) return array[0];
