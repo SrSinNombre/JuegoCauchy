@@ -111,7 +111,7 @@ public class ArbolBinarioDeBusqueda<T extends Comparable<T>> {
         if (raiz == null) return true;
 
         Cola<Nodo<T>> cola = new Cola<>();
-        cola.add(raiz);
+        cola.enqueue(raiz);
         boolean encontradoNodoIncompleto = false;
 
         while (!cola.isEmpty()) {
@@ -146,7 +146,7 @@ public class ArbolBinarioDeBusqueda<T extends Comparable<T>> {
         Cola<Integer> niveles = new Cola<>();
 
         cola.enqueue(raiz);
-        niveles.add(0);
+        niveles.enqueue(0);
 
         int nivelHojaMin = -1;
         int nivelHojaMax = -1;
