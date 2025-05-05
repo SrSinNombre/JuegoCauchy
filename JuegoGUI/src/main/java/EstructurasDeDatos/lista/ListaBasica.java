@@ -3,9 +3,9 @@ import EstructurasDeDatos.*;
 
 public class ListaBasica<T> implements Lista<T> {
 
-    T[] array;
-    int numElementos;
-    int maxElementos; //numElementos <= maxElementos SIEMPRE
+    protected T[] array;
+    private int numElementos;
+    private int maxElementos; //numElementos <= maxElementos SIEMPRE
 
     public ListaBasica(int maxElementos) {
         this.maxElementos = maxElementos;
@@ -15,6 +15,9 @@ public class ListaBasica<T> implements Lista<T> {
     @Override
     public int getNumElementos(){
         return numElementos;
+    }
+    public void setNumElementos(int numElementos){
+        this.numElementos = numElementos;
     }
     @Override
     public boolean add(T elemento){
@@ -36,7 +39,7 @@ public class ListaBasica<T> implements Lista<T> {
     }
     @Override
     public Iterador<T> getIterador() {
-        return new IteradorListaBasica<>();
+        return new IteradorListaBasica<>(this);
     }
 
     public void aumentarT(){
@@ -55,7 +58,7 @@ public class ListaBasica<T> implements Lista<T> {
         return array_aux;
     }
     public int buscar(T elemento){
-        IteradorListaBasica<T> it = new IteradorListaBasica<>();
+        IteradorListaBasica<T> it = new IteradorListaBasica<>(this);
         while(it.hasNext() && array[it.contador] != elemento){
             it.next();
         }
@@ -75,15 +78,6 @@ public class ListaBasica<T> implements Lista<T> {
         }
         return elemento;
     }
-    public void sumar(ListaBasica<T> otraLista){
-        while(maxElementos < numElementos + otraLista.numElementos){
-            aumentarT();
-        }
-        IteradorListaBasica<T> it = new IteradorListaBasica<>();
-        for(int i = 0; i < otraLista.numElementos; i++){
-            add(otraLista.array[i]);
-        }
-    }
     public boolean setElemento(int indice, T elemento){
         if(indice >= numElementos){
             System.out.println("El índice no es válido.");
@@ -101,7 +95,7 @@ public class ListaBasica<T> implements Lista<T> {
     }
     public T random(){
         float a = (float) Math.random();
-        int n = Math.round(a*numElementos);
+        int n = Math.round(a*(numElementos-1));
         return get(n);
     }
 }

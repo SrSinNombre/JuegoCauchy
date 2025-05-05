@@ -2,31 +2,31 @@ package EstructurasDeDatos.lista;
 import EstructurasDeDatos.*;
 
 public class IteradorListaBasica<T> implements Iterador<T> {
-    T[] array;
-    int numElementos;
-    int contador;
+    protected ListaBasica<T> lista;
+    protected int contador;
 
-    public IteradorListaBasica(){
+    public IteradorListaBasica(ListaBasica<T> lista){
         this.contador = 0;
+        this.lista = lista;
     }
     @Override
     public boolean hasNext(){
-        return contador < numElementos;
+        return contador < lista.getNumElementos();
     }
     @Override
     public T next() {
-        T siguiente = array[contador+1];
+        T siguiente = lista.array[contador+1];
         contador += 1;
         return siguiente;
     }
     @Override
     public void delete(){ //elimina el último elemento retornado por next()
         int i = contador;
-        while (i < numElementos - 1) {
-            array[i] = array[i+1];
+        while (i < lista.getNumElementos() - 1) {
+            lista.array[i] = lista.array[i+1];
             i++;
         }
-        numElementos -= 1;
+        lista.setNumElementos(lista.getNumElementos()-1);
         contador -= 1;
     }
 }
