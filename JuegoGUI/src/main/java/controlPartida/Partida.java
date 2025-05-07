@@ -58,8 +58,8 @@ public class Partida {
     public boolean colocarUnidad(Unidades u, int x, int y){
         if(tablero[x][y] == null){
             tablero[x][y] = u;
-            listaUnidades.agregar(u, new int[]{x, y});
             int[] casilla = new int[]{x, y};
+            listaUnidades.agregar(u, casilla);
             if(propiedadCasilla(casilla).equals("+10HP")) u.subirHP(10);
             if(propiedadCasilla(casilla).equals("+20HP")) u.subirHP(20);
             if(propiedadCasilla(casilla).equals("+50HP")) u.subirHP(50);
