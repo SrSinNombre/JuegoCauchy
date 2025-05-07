@@ -9,6 +9,9 @@ public class DiccionarioBasico<K, V> {
         lista = new ListaDE<>();
     }
 
+    public Diccionario<K, V> getCabeza(){
+        return lista.getCabeza().getDato();
+    }
     public boolean agregar(K clave, V valor) {
         lista.add(new Diccionario<>(clave, valor));
         return true;

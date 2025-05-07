@@ -44,8 +44,7 @@ public class IteradorListaDE<T> implements Iterador<T>{
             System.out.println("No se ha invocado el método next()");
         }else{
             ElementoDoble<T> puntero2 = puntero;
-            ElementoDoble<T> anterior = puntero.getAnterior();
-            anterior = null;
+           puntero.setAnterior(null);
             while(puntero2.getSiguiente() != null){
                 puntero2 = puntero2.getSiguiente();
             }

@@ -7,14 +7,11 @@ import EstructurasDeDatos.lista.ListaBasica;
 
 public class GrafoNoPonderado<T> {
     private Vertice<T> primerVertice;
-    private final Lista<AristaSinPeso<T>> aristasTotales;
-    private final Lista<Vertice<T>> verticesTotales;
+    private final Lista<Vertice<T>> verticesTotales = new ListaBasica<>(1);
 
     public GrafoNoPonderado(Vertice<T> primerVertice){
         this.primerVertice = primerVertice;
-        verticesTotales = new ListaBasica<>(1);
         verticesTotales.add(primerVertice);
-        aristasTotales = new ListaBasica<>(1);
     }
     public Vertice<T> getPrimerVertice() {
         return primerVertice;
@@ -23,18 +20,13 @@ public class GrafoNoPonderado<T> {
         this.primerVertice = primerVertice;
     }
 
-    public void addVertice(Vertice<T> v){
-        verticesTotales.add(v);
-    }
     public void addArista(Vertice<T> v1, Vertice<T> v2){
         v1.verticesUnidos.add(v2);
         v2.verticesUnidos.add(v1);
-        aristasTotales.add(new AristaSinPeso<>(v1, v2));
     }
-    public void deleteArista(AristaSinPeso<T> arista){
-        aristasTotales.delete(arista);
-        arista.origen.verticesUnidos.delete(arista.destino);
-        arista.destino.verticesUnidos.delete(arista.origen);
+    public void deleteArista(Vertice<T> origenArista, Vertice<T> destinoArista){
+        origenArista.verticesUnidos.delete(destinoArista);
+        destinoArista.verticesUnidos.delete(origenArista);
     }
 
     public Lista<Vertice<T>> recorrerEnProfundidad(){

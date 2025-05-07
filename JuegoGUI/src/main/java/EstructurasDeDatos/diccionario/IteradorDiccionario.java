@@ -31,8 +31,7 @@ public class IteradorDiccionario<K, V> implements Iterador<K> {
             System.out.println("No se ha invocado el método next()");
         }else{
             Diccionario<K, V> posicion2 = posicion;
-            Diccionario<K, V> anterior = posicion.getAnterior();
-            anterior = null;
+            posicion.setAnterior(null);
             while(posicion2.getSiguiente() != null){
                 posicion2 = posicion2.getSiguiente();
             }

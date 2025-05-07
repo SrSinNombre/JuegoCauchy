@@ -19,6 +19,9 @@ public class Unidades {
     public double getHP() {
         return HP;
     }
+    public void setHP(double HP){
+        this.HP = HP;
+    }
     public int getAtaque() {
         return ataque;
     }
@@ -42,12 +45,17 @@ public class Unidades {
         return esDeCiencias;
     }
 
-    public void atacar(Unidades u){
-        double factorAleatorio = Math.random() * 2;
-        double dano = factorAleatorio*ataque - u.defensa;
-        HP -= dano;
-    }
     public boolean isUnidadMuerta(){
         return HP <= 0;
+    }
+
+    public void subirHP(double inc){
+        HP += inc;
+    }
+    public void subirAtaque(int inc){
+        ataque += inc;
+    }
+    public void subirDefensa(int inc){
+        defensa += inc;
     }
 }
