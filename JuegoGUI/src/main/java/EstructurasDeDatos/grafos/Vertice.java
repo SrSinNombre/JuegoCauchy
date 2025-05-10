@@ -13,4 +13,7 @@ public class Vertice<T> {
     public int getGrado(){
         return verticesUnidos.getNumElementos();
     }
+    public T getValor(){
+        return valor;
+    }
 }

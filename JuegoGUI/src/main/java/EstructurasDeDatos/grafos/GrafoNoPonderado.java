@@ -7,11 +7,9 @@ import EstructurasDeDatos.lista.ListaBasica;
 
 public class GrafoNoPonderado<T> {
     private Vertice<T> primerVertice;
-    private final Lista<Vertice<T>> verticesTotales = new ListaBasica<>(1);
 
     public GrafoNoPonderado(Vertice<T> primerVertice){
         this.primerVertice = primerVertice;
-        verticesTotales.add(primerVertice);
     }
     public Vertice<T> getPrimerVertice() {
         return primerVertice;

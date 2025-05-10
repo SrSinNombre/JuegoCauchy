@@ -1,8 +1,8 @@
 package controlPartida;
 
 import EstructurasDeDatos.Iterador;
-import EstructurasDeDatos.diccionario.Diccionario;
-import EstructurasDeDatos.diccionario.DiccionarioBasico;
+import EstructurasDeDatos.diccionario.*;
+import EstructurasDeDatos.grafos.*;
 import EstructurasDeDatos.lista.ListaBasica;
 import Unidades.*;
 
@@ -11,7 +11,7 @@ public class Partida {
     private int tableroAncho;
     private int tableroAlto;
     private Unidades[][] tablero;
-    private DiccionarioBasico<Unidades, int[]> listaUnidades = new DiccionarioBasico<>();
+    private DiccionarioBasico<Unidades, int[]> listaTodasLasUnidades = new DiccionarioBasico<>();
 
     public Partida(int tableroAncho, int tableroAlto, boolean jugadorEsDeCiencias){
         this.tableroAncho = tableroAncho;
@@ -35,7 +35,7 @@ public class Partida {
         return tableroAlto == tableroAncho;
     }
 
-    public ListaBasica<Unidades> getLista(boolean esDeCiencias){
+    public ListaBasica<Unidades> getListaUnidades(boolean esDeCiencias){
         ListaBasica<Unidades> lista = new ListaBasica<>(5);
         if(esDeCiencias){
             Ciencias c = new Ciencias();
@@ -59,7 +59,7 @@ public class Partida {
         if(tablero[x][y] == null){
             tablero[x][y] = u;
             int[] casilla = new int[]{x, y};
-            listaUnidades.agregar(u, casilla);
+            listaTodasLasUnidades.agregar(u, casilla);
             if(propiedadCasilla(casilla).equals("+10HP")) u.subirHP(10);
             if(propiedadCasilla(casilla).equals("+20HP")) u.subirHP(20);
             if(propiedadCasilla(casilla).equals("+50HP")) u.subirHP(50);
@@ -107,7 +107,7 @@ public class Partida {
         return null;
     }
     public int[] buscarUnidad(Unidades u){
-        return listaUnidades.get(u);
+        return listaTodasLasUnidades.get(u);
     }
     public boolean sePuedeMoverA(Unidades u, int x, int y){
         int[] uPos = buscarUnidad(u);
@@ -131,20 +131,27 @@ public class Partida {
 
         return true;
     }
+    public boolean puedeAtacarA(Unidades atacante, int x, int y){
+        int[] posAtacante = buscarUnidad(atacante);
+        if(Math.abs(posAtacante[0] - x) > atacante.getRango_ataque()) return false;
+        if(Math.abs(posAtacante[1] - y) > atacante.getRango_ataque()) return false;
+
+        return true;
+    }
     public boolean atacar(Unidades atacante, Unidades atacado){
         if(!puedeAtacarA(atacante, atacado)) return false;
         double factorAleatorio = Math.random() * 2;
-        double danoInfligido = factorAleatorio*atacante.getAtaque() - atacado.getDefensa();
+        double danoInfligido = Math.abs(factorAleatorio*atacante.getAtaque() - atacado.getDefensa());
         atacado.subirHP(-danoInfligido);
         if(atacado.isUnidadMuerta()){
             int[] atacadoPos = buscarUnidad(atacado);
             tablero[atacadoPos[0]][atacadoPos[1]] = null;
-            listaUnidades.delete(atacado);
+            listaTodasLasUnidades.delete(atacado);
         }
         return true;
     }
     public boolean generarUnidadRandom(boolean esDeCiencias){
-        ListaBasica<Unidades> lista = getLista(esDeCiencias);
+        ListaBasica<Unidades> lista = getListaUnidades(esDeCiencias);
         Unidades u = lista.random();
         int randX = Math.round((float) Math.random()*(tableroAncho-1));
         int randY = Math.round((float) Math.random()*(tableroAlto-1));
@@ -153,10 +160,10 @@ public class Partida {
     }
 
     public void iniciarPartida(){
-        Unidades c1 = getLista(true).random();
-        Unidades c2 = getLista(true).random();
-        Unidades l1 = getLista(false).random();
-        Unidades l2 = getLista(false).random();
+        Unidades c1 = getListaUnidades(true).random();
+        Unidades c2 = getListaUnidades(true).random();
+        Unidades l1 = getListaUnidades(false).random();
+        Unidades l2 = getListaUnidades(false).random();
         if(turno == 0){
             colocarUnidad(c1, 0, 0);
             colocarUnidad(c2, 0, tableroAlto-1);
@@ -170,18 +177,12 @@ public class Partida {
         }
     }
     public boolean finPartida(){
-        Diccionario<Unidades, int[]> cabeza = listaUnidades.getCabeza();
-        Iterador<Unidades> it = listaUnidades.getIterador();
-        if(it.next().isDeCiencias() != cabeza.getClave().isDeCiencias()) return false;
-        while(it.hasNext()){
-            if(it.next().isDeCiencias() != cabeza.getClave().isDeCiencias()) return false;
-        }
-        return true;
+        return generarGrafoUnidades(true) == null || generarGrafoUnidades(false) == null;
     }
 
-    public void transcursoPartida(){ //esto iría en el controlador
+    public void transcursoPartida(boolean jugadorEsDeCiencias){ //esto iría en el controlador
+        iniciarPartida();
         while(!finPartida()){
-            iniciarPartida();
             if(turno % 2 == 0){ //turno del jugador de ciencias
 
                 if(turno % 10 == 0) {
@@ -194,6 +195,118 @@ public class Partida {
                 turno++;
             }
         }
+    }
+
+
+    public int getDistancia(Unidades u, Unidades v){
+        int[] uPos = listaTodasLasUnidades.get(u);
+        int[] vPos = listaTodasLasUnidades.get(v);
+        return Math.abs(uPos[0] - vPos[0]) + Math.abs(uPos[1] - vPos[1]);
+    }
+    public DiccionarioBasico<Unidades, int[]> getDiccionarioUnidadesTablero(boolean esDeCiencias){
+        Iterador<Unidades> it = listaTodasLasUnidades.getIterador();
+        DiccionarioBasico<Unidades, int[]> diccionarioUnidadesTablero = new DiccionarioBasico<>();
+
+        if(listaTodasLasUnidades.getCabeza().getClave().isDeCiencias() == esDeCiencias) {
+            diccionarioUnidadesTablero.agregar(listaTodasLasUnidades.getCabeza().getClave(),
+                    listaTodasLasUnidades.getCabeza().getValor());
+        }
+        while(it.hasNext()){
+            Unidades u = it.next();
+            if(u.isDeCiencias() == esDeCiencias) diccionarioUnidadesTablero.agregar(u, listaTodasLasUnidades.get(u));
+        }
+        return diccionarioUnidadesTablero;
+    }
+    public Arista<Unidades> elegirAristaIA(ListaBasica<Arista<Unidades>> listaAristas){
+        if(listaAristas.getNumElementos() == 1) return listaAristas.get(0);
+        else return listaAristas.random();
+    }
+    public Unidades elegirUnidadIA(Arista<Unidades> arista, boolean iaEsDeCiencias){
+        if(arista.getOrigen().getValor().isDeCiencias() == iaEsDeCiencias) return arista.getOrigen().getValor();
+        else return arista.getDestino().getValor();
+    }
+    public int[] elegirMejorCasilla(Arista<Unidades> arista, boolean iaEsDeCiencias){
+        Unidades unidadIA = elegirUnidadIA(arista, iaEsDeCiencias);
+        Unidades unidadJugador = elegirUnidadIA(arista, !iaEsDeCiencias);
+        int[] casillaUnidadIA = buscarUnidad(unidadIA);
+        int[] casillaUnidadJugador = buscarUnidad(unidadJugador);
+        int xDiff = casillaUnidadJugador[0] - casillaUnidadIA[0]; //Si unidadIA está a la derecha xDiff < 0
+        int yDiff = casillaUnidadJugador[1] - casillaUnidadIA[1];
+        int deltaX = 0;
+        int deltaY = 0;
+        if(arista.getPeso() > unidadIA.getRango_ataque()){ //Si la unidad del jugador está fuera del rango de ataque, que se mueva
+
+            if(unidadIA.getHP() >= 30){  //Si unidadIA tiene suficiente vida, que se acerque, pero si unidadIA tiene poca vida, que huya
+                if(xDiff != 0) deltaX = unidadIA.getRango_movimiento()*(xDiff/Math.abs(xDiff));
+                if(yDiff != 0) deltaY = unidadIA.getRango_movimiento()*(yDiff/Math.abs(yDiff));
+
+            }else{
+                if(xDiff != 0) deltaX = -unidadIA.getRango_movimiento()*(xDiff/Math.abs(xDiff));
+                if(yDiff != 0) deltaY = -unidadIA.getRango_movimiento()*(yDiff/Math.abs(yDiff));
+
+            }
+        }else if(arista.getPeso() <= unidadIA.getRango_ataque()){
+            if(unidadIA.getHP() >= 30) {
+                return null;
+            }
+            else{ //Igual que en el anterior if, pero aquí distingo dos casos: que unidadIA pueda escapar del rango de ataque o que no pueda
+                if(xDiff != 0) deltaX = unidadIA.getRango_movimiento()*(xDiff/Math.abs(xDiff));
+                if(yDiff != 0) deltaY = unidadIA.getRango_movimiento()*(yDiff/Math.abs(yDiff));
+            }
+        }
+        return new int[]{casillaUnidadIA[0] + deltaX, casillaUnidadIA[1] + deltaY};
+    }
+    public GrafoPonderado<Unidades> generarGrafoUnidades(boolean iaEsDeCiencias){
+        try {
+            DiccionarioBasico<Unidades, int[]> diccionarioUnidadesTableroIA = getDiccionarioUnidadesTablero(iaEsDeCiencias);
+            Unidades cabezaIA = diccionarioUnidadesTableroIA.getCabeza().getClave();
+            DiccionarioBasico<Unidades, int[]> diccionarioUnidadesTableroJugador = getDiccionarioUnidadesTablero(!iaEsDeCiencias);
+            Unidades cabezaJugador = diccionarioUnidadesTableroJugador.getCabeza().getClave();
+
+            Vertice<Unidades> primerVertice = new Vertice<>(cabezaIA);
+            GrafoPonderado<Unidades> grafoUnidades = new GrafoPonderado<>(primerVertice);
+
+            grafoUnidades.addArista(primerVertice, new Vertice<>(cabezaJugador),
+                    getDistancia(primerVertice.getValor(), cabezaJugador));
+
+            Iterador<Unidades> itJ1 = diccionarioUnidadesTableroJugador.getIterador();
+            while(itJ1.hasNext()){
+                Unidades u = itJ1.next();
+                grafoUnidades.addArista(primerVertice, new Vertice<>(u), getDistancia(primerVertice.getValor(), u));
+            }
+            Iterador<Unidades> itIA1 = diccionarioUnidadesTableroIA.getIterador();
+            while(itIA1.hasNext()){
+                Unidades u = itIA1.next();
+                grafoUnidades.addArista(new Vertice<>(u), new Vertice<>(cabezaJugador), getDistancia(u, cabezaJugador));
+                Iterador<Unidades> itJ2 = diccionarioUnidadesTableroJugador.getIterador();
+                while(itJ2.hasNext()){
+                    Unidades v = itJ2.next();
+                    grafoUnidades.addArista(new Vertice<>(u), new Vertice<>(v), getDistancia(u, v));
+                }
+            }
+            return grafoUnidades;
+        } catch (NullPointerException e) {
+            return null;
+        }
+    }
+
+    public void IA(boolean iaEsDeCiencias){
+
+        GrafoPonderado<Unidades> grafoUnidades = generarGrafoUnidades(iaEsDeCiencias);
+        //grafoUnidades conecta todas las unidades del jugador con las de la ia PERO NO ENTRE SÍ
+
+        ListaBasica<Arista<Unidades>> listaAristasMenorPeso = grafoUnidades.getAristasMenorPeso();
+        Arista<Unidades> aristaElegida = elegirAristaIA(listaAristasMenorPeso);
+        int[] casillaElegida = elegirMejorCasilla(aristaElegida, iaEsDeCiencias);
+        if(casillaElegida == null) atacar(elegirUnidadIA(aristaElegida, iaEsDeCiencias), elegirUnidadIA(aristaElegida, !iaEsDeCiencias));
+        else {
+            while (puedeAtacarA(elegirUnidadIA(aristaElegida, !iaEsDeCiencias), casillaElegida[0], casillaElegida[1]) && listaAristasMenorPeso.getNumElementos() != 1) {
+                aristaElegida = elegirAristaIA(listaAristasMenorPeso);
+                casillaElegida = elegirMejorCasilla(aristaElegida, iaEsDeCiencias);
+            }
+            moverUnidad(elegirUnidadIA(aristaElegida, iaEsDeCiencias), casillaElegida[0], casillaElegida[1]);
+        }
+
     }
 
 }
