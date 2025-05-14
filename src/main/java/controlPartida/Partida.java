@@ -6,6 +6,11 @@ import EstructurasDeDatos.grafos.*;
 import EstructurasDeDatos.lista.ListaBasica;
 import Unidades.*;
 
+import com.google.gson.Gson;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+
 public class Partida {
     private int turno;
     private int tableroAncho;
@@ -307,6 +312,25 @@ public class Partida {
             moverUnidad(elegirUnidadIA(aristaElegida, iaEsDeCiencias), casillaElegida[0], casillaElegida[1]);
         }
 
+    }
+
+    public void guardar(String filename) {
+        Gson gson = new Gson();
+        try (FileWriter writer = new FileWriter(filename)) {
+            gson.toJson(this, writer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static Partida cargar(String filename) {
+        Gson gson = new Gson();
+        try (FileReader reader = new FileReader(filename)) {
+            return gson.fromJson(reader, Partida.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
 }
