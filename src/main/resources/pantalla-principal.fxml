@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox alignment="CENTER" fillWidth="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label alignment="CENTER" contentDisplay="TOP" prefHeight="81.0" prefWidth="477.0" text="NICO MASÓN" textFill="#00ff15">
+         <font>
+            <Font name="Impact" size="63.0" />
+         </font>
+      </Label>
+      <Button mnemonicParsing="false" prefHeight="59.0" prefWidth="250.0" text="NUEVA PARTIDA" textFill="RED">
+         <font>
+            <Font name="Algerian" size="24.0" />
+         </font>
+         <VBox.margin>
+            <Insets top="40.0" />
+         </VBox.margin>
+      </Button>
+      <Button layoutX="235.0" layoutY="227.0" mnemonicParsing="false" prefHeight="59.0" prefWidth="250.0" text="CARGAR PARTIDA" textFill="RED">
+         <font>
+            <Font name="Algerian" size="24.0" />
+         </font>
+         <VBox.margin>
+            <Insets top="40.0" />
+         </VBox.margin>
+      </Button>
+      <Button cancelButton="true" layoutX="235.0" layoutY="317.0" mnemonicParsing="false" prefHeight="59.0" prefWidth="250.0" text="SALIR DEL JUEGO" textFill="RED">
+         <font>
+            <Font name="Algerian" size="24.0" />
+         </font>
+         <VBox.margin>
+            <Insets top="40.0" />
+         </VBox.margin>
+      </Button>
+      <Label alignment="CENTER" prefHeight="18.0" prefWidth="359.0" text="Había pensado en poner aquí textos random como en el minecraft">
+         <VBox.margin>
+            <Insets top="30.0" />
+         </VBox.margin>
+      </Label>
+   </children>
+</VBox>
