@@ -314,10 +314,10 @@ public class Partida {
 
     }
 
-    public void guardar(String filename) {
+    public void guardar(Partida partida, String filename) {
         Gson gson = new Gson();
         try (FileWriter writer = new FileWriter(filename)) {
-            gson.toJson(this, writer);
+            gson.toJson(partida, writer);
         } catch (IOException e) {
             e.printStackTrace();
         }
