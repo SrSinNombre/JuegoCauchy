@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.juegogui.BandoController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.juegogui.BandoControllerLetras">
    <children>
       <Label alignment="CENTER" contentDisplay="TOP" prefHeight="94.0" prefWidth="700.0" text="LETRAS" textFill="#a46420">
          <font>
@@ -44,9 +44,9 @@
                         <Font name="Calibri" size="16.0" />
                      </font>
                   </Label>
-                  <Button layoutX="29.0" layoutY="43.0" mnemonicParsing="false" text="BxA" />
-                  <Button layoutX="96.0" layoutY="43.0" mnemonicParsing="false" text="BxA" />
-                  <Button layoutX="162.0" layoutY="43.0" mnemonicParsing="false" text="BxA" />
+                  <Button layoutX="29.0" layoutY="43.0" mnemonicParsing="false" text="8x8" />
+                  <Button layoutX="96.0" layoutY="43.0" mnemonicParsing="false" text="10x10" />
+                  <Button layoutX="162.0" layoutY="43.0" mnemonicParsing="false" text="15x15" />
                </children></AnchorPane>
         </items>
       </SplitPane>

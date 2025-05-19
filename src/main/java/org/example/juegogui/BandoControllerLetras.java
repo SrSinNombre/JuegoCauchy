@@ -8,9 +8,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
+import controlPartida.*;
 
 import java.io.IOException;
-public class BandoController {
+public class BandoControllerLetras {
     @FXML
     private Button EmpezarPartida;
     @FXML
@@ -20,6 +21,7 @@ public class BandoController {
 
     @FXML
     public void onEmpezarPartidaClick(ActionEvent actionEvent){
+        Partida partida = new Partida(8, 8, false);
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("/org/example/juegogui/pantalla-partida.fxml"));
             Scene scene = new Scene(fxmlLoader.load(), 640, 480);
