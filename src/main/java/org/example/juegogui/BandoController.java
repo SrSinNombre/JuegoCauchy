@@ -4,33 +4,41 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-
-public class HelloController {
+public class BandoController {
     @FXML
-    private Button botonNuevaPartida;
+    private Button EmpezarPartida;
     @FXML
-    private Button botonCargarPartida;
-    @FXML
-    private Button botonSalirDelJuego;
+    private Button SalirBando;
     @FXML
     private Label cabecera;
 
-    private Parent root;
-
     @FXML
-    protected void onBotonNuevaPartidaClick(ActionEvent actionEvent) {
+    public void onEmpezarPartidaClick(ActionEvent actionEvent){
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("/org/example/juegogui/pantalla-partida.fxml"));
+            Scene scene = new Scene(fxmlLoader.load(), 640, 480);
+            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+            stage.setTitle("CONQUISTA");
+            stage.setScene(scene);
+            stage.show();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("Error al cargar la pantalla principal");
+        }
+    }
+    public void onSalirBandoClick(ActionEvent actionEvent){
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("/org/example/juegogui/escoge-bando.fxml"));
             Scene scene = new Scene(fxmlLoader.load(), 640, 480);
             Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-            stage.setTitle("EscogeBando");
+            stage.setTitle("CONQUISTA");
             stage.setScene(scene);
             stage.show();
         }
@@ -40,18 +48,4 @@ public class HelloController {
         }
     }
 
-    public void onBotonSalirDelJuegoClick(ActionEvent actionEvent) throws IOException {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("/org/example/juegogui/preguntar-salida.fxml"));
-            Scene scene = new Scene(fxmlLoader.load(), 640, 480);
-            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-            stage.setTitle("PreguntaSalida");
-            stage.setScene(scene);
-            stage.show();
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-            System.err.println("Error al cargar la pantalla principal");
-        }
-    }
 }
