@@ -11,10 +11,12 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import javafx.scene.image.Image;
 import org.apache.logging.log4j.*;
 
 public class Partida {
     private static final Logger log = LogManager.getLogger(Partida.class);
+    private int tileSize=15;
     private int turno;
     private int tableroAncho;
     private int tableroAlto;
@@ -24,6 +26,9 @@ public class Partida {
     public Partida(int tableroAncho, int tableroAlto, boolean jugadorEsDeCiencias){
         this.tableroAncho = tableroAncho;
         this.tableroAlto = tableroAlto;
+        Image wht = new Image("file:src/main/resources/Sprites/wht.png");
+        Image blt = new Image("file:src/main/resources/Sprites/blt.png");
+
 
         if(jugadorEsDeCiencias) turno = 0;
         else turno = 1;
@@ -193,8 +198,8 @@ public class Partida {
         log.info("El tablero es" + tableroAncho + "x" + tableroAlto);
     }
     public boolean finPartida(){
-        return generarGrafoUnidades(true) == null || generarGrafoUnidades(false) == null;
         log.info ("Fin de partida");
+        return generarGrafoUnidades(true) == null || generarGrafoUnidades(false) == null;
     }
 
     public void transcursoPartida(boolean jugadorEsDeCiencias){ //esto iría en el controlador
