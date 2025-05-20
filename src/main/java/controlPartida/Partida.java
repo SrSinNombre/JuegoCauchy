@@ -29,14 +29,6 @@ public class Partida {
         else turno = 1;
 
         tablero = new Unidades[tableroAncho][tableroAlto];
-        log.info("La partida ha comenzado");
-        log.info("El tablero es" + tableroAncho + "x" + tableroAlto);
-        if (turno == 0){
-            log.info("Turno de Ciencias");
-        }
-        else{
-            log.info("Turno de Letras");
-        }
         //tamaños del tablero: 8x8, 10x10, 15x15
     }
 
@@ -199,12 +191,6 @@ public class Partida {
         }
         log.info("La partida ha comenzado");
         log.info("El tablero es" + tableroAncho + "x" + tableroAlto);
-        if (turno == 0){
-            log.info("Turno de Ciencias");
-        }
-        else{
-            log.info("Turno de Letras");
-        }
     }
     public boolean finPartida(){
         return generarGrafoUnidades(true) == null || generarGrafoUnidades(false) == null;
@@ -215,6 +201,7 @@ public class Partida {
         iniciarPartida();
         while(!finPartida()){
             if(turno % 2 == 0){ //turno del jugador de ciencias
+                log.info("Turno de ciencias");
 
                 if(turno % 10 == 0) {
                     while(!generarUnidadRandom(true)) generarUnidadRandom(true);
@@ -222,6 +209,7 @@ public class Partida {
                 }
                 turno++;
             }else if(turno % 2 == 1){ //turno del jugador de letras
+                log.info("Turno de letras");
 
                 turno++;
             }
