@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.juegogui.EscogeBandoController">
+   <children>
+      <Label alignment="CENTER" contentDisplay="TOP" prefHeight="67.0" prefWidth="706.0" text="ESCOGE TU BANDO" textAlignment="CENTER" textFill="#a42c21">
+         <VBox.margin>
+            <Insets top="20.0" />
+         </VBox.margin>
+         <font>
+            <Font name="Impact" size="48.0" />
+         </font>
+      </Label>
+      <SplitPane dividerPositions="0.49999999999999994" prefHeight="309.0" prefWidth="700.0">
+        <items>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+               <children>
+                  <Button mnemonicParsing="false" onAction="#onCienciasClick" prefHeight="308.0" prefWidth="346.0" text="CIENCIAS" textFill="#2dae17">
+                     <font>
+                        <Font name="Cambria" size="32.0" />
+                     </font>
+                  </Button>
+               </children></AnchorPane>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+               <children>
+                  <Button layoutY="1.0" mnemonicParsing="false" onAction="#onLetrasClick" prefHeight="308.0" prefWidth="346.0" text="LETRAS" textFill="#a46420">
+                     <font>
+                        <Font name="Times New Roman" size="32.0" />
+                     </font>
+                  </Button>
+               </children></AnchorPane>
+        </items>
+      </SplitPane>
+      <Button contentDisplay="CENTER" mnemonicParsing="false" onAction="#onSalirClick" prefHeight="50.0" prefWidth="350.0" text="Salir al menú principal" translateX="174.0" translateY="24.0">
+         <font>
+            <Font name="Calibri" size="20.0" />
+         </font>
+      </Button>
+   </children>
+</VBox>

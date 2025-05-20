@@ -5,14 +5,14 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<VBox alignment="CENTER" fillWidth="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
+<VBox alignment="CENTER" fillWidth="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.juegogui.HelloController">
    <children>
-      <Label alignment="CENTER" contentDisplay="TOP" prefHeight="81.0" prefWidth="477.0" text="NICO MASÓN" textFill="#00ff15">
+      <Label alignment="CENTER" contentDisplay="TOP" prefHeight="81.0" prefWidth="477.0" text="CONQUISTA" textFill="#00ff15">
          <font>
             <Font name="Impact" size="63.0" />
          </font>
       </Label>
-      <Button mnemonicParsing="false" prefHeight="59.0" prefWidth="250.0" text="NUEVA PARTIDA" textFill="RED">
+      <Button fx:id="botonNuevaPartida" mnemonicParsing="false" onAction="#onBotonNuevaPartidaClick" prefHeight="59.0" prefWidth="250.0" text="NUEVA PARTIDA" textFill="RED">
          <font>
             <Font name="Algerian" size="24.0" />
          </font>
@@ -20,7 +20,7 @@
             <Insets top="40.0" />
          </VBox.margin>
       </Button>
-      <Button layoutX="235.0" layoutY="227.0" mnemonicParsing="false" prefHeight="59.0" prefWidth="250.0" text="CARGAR PARTIDA" textFill="RED">
+      <Button fx:id="botonCargarPartida" layoutX="235.0" layoutY="227.0" mnemonicParsing="false" prefHeight="59.0" prefWidth="250.0" text="CARGAR PARTIDA" textFill="RED">
          <font>
             <Font name="Algerian" size="24.0" />
          </font>
@@ -28,7 +28,7 @@
             <Insets top="40.0" />
          </VBox.margin>
       </Button>
-      <Button cancelButton="true" layoutX="235.0" layoutY="317.0" mnemonicParsing="false" prefHeight="59.0" prefWidth="250.0" text="SALIR DEL JUEGO" textFill="RED">
+      <Button fx:id="botonSalirDelJuego" cancelButton="true" layoutX="235.0" layoutY="317.0" mnemonicParsing="false" onAction="#onBotonSalirDelJuegoClick" prefHeight="59.0" prefWidth="250.0" text="SALIR DEL JUEGO" textFill="RED">
          <font>
             <Font name="Algerian" size="24.0" />
          </font>

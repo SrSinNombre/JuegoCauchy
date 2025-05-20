@@ -16,7 +16,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Button layoutX="400.0" layoutY="223.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="246.0" text="CARGAR PARTIDA" textFill="RED">
+      <Button layoutX="400.0" layoutY="223.0" mnemonicParsing=z"false" prefHeight="50.0" prefWidth="246.0" text="CARGAR PARTIDA" textFill="RED">
          <font>
             <Font name="Algerian" size="23.0" />
          </font>
