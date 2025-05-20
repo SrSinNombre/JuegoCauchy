@@ -11,7 +11,10 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import org.apache.logging.log4j.*;
+
 public class Partida {
+    private static final Logger log = LogManager.getLogger(Partida.class);
     private int turno;
     private int tableroAncho;
     private int tableroAlto;
@@ -26,7 +29,14 @@ public class Partida {
         else turno = 1;
 
         tablero = new Unidades[tableroAncho][tableroAlto];
-
+        log.info("La partida ha comenzado");
+        log.info("El tablero es" + tableroAncho + "x" + tableroAlto);
+        if (turno == 0){
+            log.info("Turno de Ciencias");
+        }
+        else{
+            log.info("Turno de Letras");
+        }
         //tamaños del tablero: 8x8, 10x10, 15x15
     }
 
@@ -126,7 +136,9 @@ public class Partida {
         int[] uPosInicial = buscarUnidad(u);
         tablero[x][y] = u;
         tablero[uPosInicial[0]][uPosInicial[1]] = null;
+        log.info("El" + u + "se ha movido a la casilla" + x +"," + y + "en el turno" + turno);
         return true;
+
     }
     public boolean puedeAtacarA(Unidades atacante, Unidades atacado){
         int[] posAtacante = buscarUnidad(atacante);
@@ -148,10 +160,15 @@ public class Partida {
         double factorAleatorio = Math.random() * 2;
         double danoInfligido = Math.abs(factorAleatorio*atacante.getAtaque() - atacado.getDefensa());
         atacado.subirHP(-danoInfligido);
+        log.info("El" + atacante + "le ha inflingido un daño de " + danoInfligido + "al" + atacado);
         if(atacado.isUnidadMuerta()){
             int[] atacadoPos = buscarUnidad(atacado);
+            log.info("El" + atacado + "ha muerto");
             tablero[atacadoPos[0]][atacadoPos[1]] = null;
             listaTodasLasUnidades.delete(atacado);
+        }
+        else{
+            log.info("El"+ atacado + "tiene" + atacado.isUnidadMuerta() + "de vida");
         }
         return true;
     }
@@ -160,7 +177,7 @@ public class Partida {
         Unidades u = lista.random();
         int randX = Math.round((float) Math.random()*(tableroAncho-1));
         int randY = Math.round((float) Math.random()*(tableroAlto-1));
-
+        log.info("Se ha generado un" + u + "en la casilla" + randX + "," + randY);
         return colocarUnidad(u, randX, randY);
     }
 
@@ -180,9 +197,18 @@ public class Partida {
             colocarUnidad(c1, tableroAncho-1, 0);
             colocarUnidad(c2, tableroAncho-1, tableroAlto-1);
         }
+        log.info("La partida ha comenzado");
+        log.info("El tablero es" + tableroAncho + "x" + tableroAlto);
+        if (turno == 0){
+            log.info("Turno de Ciencias");
+        }
+        else{
+            log.info("Turno de Letras");
+        }
     }
     public boolean finPartida(){
         return generarGrafoUnidades(true) == null || generarGrafoUnidades(false) == null;
+        log.info ("Fin de partida");
     }
 
     public void transcursoPartida(boolean jugadorEsDeCiencias){ //esto iría en el controlador
