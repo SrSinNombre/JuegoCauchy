@@ -8,6 +8,7 @@ public class ElementoDoble<T> extends Elemento<T> {
 
     public ElementoDoble(T dato){
         super(dato);
+        this.dato = dato;
         this.anterior = null;
         this.siguiente = null;
     }

@@ -1,4 +1,4 @@
-package controlPartida;
+package org.example.juegogui;
 
 public class CasillaEspecial {
     private int[] coordenadas;

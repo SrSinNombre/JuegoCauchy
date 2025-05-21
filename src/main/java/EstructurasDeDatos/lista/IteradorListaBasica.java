@@ -11,13 +11,17 @@ public class IteradorListaBasica<T> implements Iterador<T> {
     }
     @Override
     public boolean hasNext(){
-        return contador < lista.getNumElementos();
+        return contador < lista.getNumElementos() - 1;
     }
     @Override
     public T next() {
-        T siguiente = lista.array[contador+1];
-        contador += 1;
-        return siguiente;
+        try {
+            T siguiente = lista.array[contador+1];
+            contador += 1;
+            return siguiente;
+        } catch (ArrayIndexOutOfBoundsException e) {
+            return null;
+        }
     }
     @Override
     public void delete(){ //elimina el último elemento retornado por next()

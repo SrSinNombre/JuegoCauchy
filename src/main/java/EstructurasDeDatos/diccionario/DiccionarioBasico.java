@@ -1,5 +1,8 @@
 package EstructurasDeDatos.diccionario;
-import EstructurasDeDatos.*;
+
+import EstructurasDeDatos.Iterador;
+import EstructurasDeDatos.listaDoblementeEnlazada.ElementoDoble;
+import EstructurasDeDatos.listaDoblementeEnlazada.IteradorListaDE;
 import EstructurasDeDatos.listaDoblementeEnlazada.ListaDE;
 
 public class DiccionarioBasico<K, V> {
@@ -13,46 +16,42 @@ public class DiccionarioBasico<K, V> {
         return lista.getCabeza().getDato();
     }
     public boolean agregar(K clave, V valor) {
+        if (hasKey(clave)) return false;
         lista.add(new Diccionario<>(clave, valor));
         return true;
     }
 
     public V get(K clave) {
-        Diccionario<K, V> elemento = lista.getCabeza().getDato();
-        if(!hasKey(clave)){
-            System.out.println("No se encontró la clave");
-            return null;
+        ElementoDoble<Diccionario<K, V>> actual = lista.getCabeza();
+        while (actual != null) {
+            Diccionario<K, V> dic = actual.getDato();
+            if (dic.getClave().equals(clave)) return dic.getValor();
+            actual = actual.getSiguiente();
         }
-        while (elemento.getClave() != clave) {
-            elemento = elemento.getSiguiente();
-        }
-        return elemento.getValor();
+        return null;
     }
 
-    public boolean delete(K clave){
-        if(lista.getCabeza() == null){
-            System.out.println("El diccionario está vacío");
-            return false;
-        }
-        Diccionario<K, V> elemento = lista.getCabeza().getDato();
-        while(elemento.getClave() != clave){
-            elemento = elemento.getSiguiente();
-        }
-        lista.delete(new Diccionario<>(clave, elemento.getValor()));
-        return true;
-    }
-    public boolean hasKey(K clave){
-        Diccionario<K, V> actual = lista.getCabeza().getDato();
-        while(actual.getClave() != clave){
-            actual = actual.getSiguiente();
-            if(actual.getSiguiente() == lista.getCola().getDato()){
-                return false;
+    public boolean delete(K clave) {
+        ElementoDoble<Diccionario<K, V>> actual = lista.getCabeza();
+        while (actual != null) {
+            if (actual.getDato().getClave().equals(clave)) {
+                lista.delete(actual.getDato());
+                return true;
             }
+            actual = actual.getSiguiente();
         }
-        return true;
+        return false;
     }
-    public Iterador<K> getIterador(){
-        return new IteradorDiccionario<>(lista.getCabeza().getDato());
+
+    public boolean hasKey(K clave) {
+        ElementoDoble<Diccionario<K, V>> actual = lista.getCabeza();
+        while (actual != null) {
+            if (actual.getDato().getClave().equals(clave)) return true;
+            actual = actual.getSiguiente();
+        }
+        return false;
+    }
+    public Iterador<Diccionario<K, V>> getIterador(){
+        return new IteradorListaDE<>(lista.getCabeza());
     }
 }
-

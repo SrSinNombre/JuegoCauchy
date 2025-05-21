@@ -44,6 +44,9 @@ public class ListaBasica<T> implements Lista<T> {
 
     public void aumentarT(){
         if(numElementos == maxElementos){
+            T[] nuevoArray =(T[]) new Object[maxElementos*2];
+            System.arraycopy(array, 0, nuevoArray, 0, maxElementos);
+            array = nuevoArray;
             maxElementos *= 2;
         }
     }

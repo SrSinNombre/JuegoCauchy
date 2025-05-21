@@ -1,6 +1,7 @@
 package EstructurasDeDatos.grafos;
 
 import EstructurasDeDatos.Iterador;
+import EstructurasDeDatos.diccionario.Diccionario;
 import EstructurasDeDatos.diccionario.DiccionarioBasico;
 import EstructurasDeDatos.lista.ListaBasica;
 
@@ -29,9 +30,9 @@ public class GrafoPonderado<T> {
         parejaVertices.add(v1);
         parejaVertices.add(v2);
         if(aristasTotales.getCabeza().getClave().equals(parejaVertices)) return false; //entre dos vértices solo hay una arista
-        Iterador<ListaBasica<Vertice<T>>> it = aristasTotales.getIterador();
+        Iterador<Diccionario<ListaBasica<Vertice<T>>, Integer>> it = aristasTotales.getIterador();
         while(it.hasNext()){
-            if(it.next().equals(parejaVertices)) return false;
+            if(it.next().getClave().equals(parejaVertices)) return false;
         }
 
         v2.verticesUnidos.add(v1);
@@ -63,11 +64,11 @@ public class GrafoPonderado<T> {
         }
     }
     public ListaBasica<Arista<T>> getAristasMenorPeso(){
-        Iterador<ListaBasica<Vertice<T>>> it = aristasTotales.getIterador();
+        Iterador<Diccionario<ListaBasica<Vertice<T>>, Integer>> it = aristasTotales.getIterador();
         ListaBasica<Arista<T>> lista = new ListaBasica<>(1);
         int menorPeso = aristasTotales.getCabeza().getValor();
         while(it.hasNext()){
-            ListaBasica<Vertice<T>> parVertices = it.next();
+            ListaBasica<Vertice<T>> parVertices = it.next().getClave();
             if(aristasTotales.get(parVertices) <= menorPeso) {
                 menorPeso = aristasTotales.get(parVertices);
                 if(aristasTotales.get(parVertices) == menorPeso) lista.add(new Arista<>(parVertices.get(0), parVertices.get(1), menorPeso));

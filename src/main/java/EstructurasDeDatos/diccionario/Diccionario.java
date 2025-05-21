@@ -3,8 +3,6 @@ package EstructurasDeDatos.diccionario;
 public class Diccionario<K, V> {
     private K clave;
     private V valor;
-    private Diccionario<K, V> siguiente;
-    private Diccionario<K, V> anterior;
 
     public Diccionario(K clave, V valor) {
         this.clave = clave;
@@ -14,25 +12,26 @@ public class Diccionario<K, V> {
     public K getClave() {
         return clave;
     }
-    public void setClave(K clave) {
-        this.clave = clave;
-    }
+
     public V getValor() {
         return valor;
     }
+
     public void setValor(V valor) {
         this.valor = valor;
     }
-    public Diccionario<K, V> getSiguiente(){
-        return siguiente;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Diccionario)) return false;
+        Diccionario<?, ?> that = (Diccionario<?, ?>) o;
+        return clave.equals(that.clave);
     }
-    public void setSiguiente(Diccionario<K, V> siguiente) {
-        this.siguiente = siguiente;
-    }
-    public Diccionario<K, V> getAnterior() {
-        return anterior;
-    }
-    public void setAnterior(Diccionario<K, V> anterior) {
-        this.anterior = anterior;
+
+    @Override
+    public int hashCode() {
+        return clave.hashCode();
     }
 }
+

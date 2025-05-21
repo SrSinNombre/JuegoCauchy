@@ -1,4 +1,4 @@
-package controlPartida;
+package org.example.juegogui;
 
 import EstructurasDeDatos.Iterador;
 import EstructurasDeDatos.diccionario.*;
@@ -11,6 +11,11 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import javafx.geometry.Pos;
+import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
 import org.apache.logging.log4j.*;
 
 public class Partida {
@@ -20,6 +25,8 @@ public class Partida {
     private int tableroAlto;
     private Unidades[][] tablero;
     private DiccionarioBasico<Unidades, int[]> listaTodasLasUnidades = new DiccionarioBasico<>();
+
+    private GridPane gridPane = new GridPane();
 
     public Partida(int tableroAncho, int tableroAlto, boolean jugadorEsDeCiencias){
         this.tableroAncho = tableroAncho;
@@ -61,10 +68,38 @@ public class Partida {
         }
         return lista;
     }
+    public DiccionarioBasico<Unidades, Image> getDiccionarioUnidadesImagen(){
+        DiccionarioBasico<Unidades, Image> diccionario = new DiccionarioBasico<>();
+
+        Ciencias c = new Ciencias();
+        Letras l = new Letras();
+        diccionario.agregar(c.getBiologo(), new Image("file:src/main/java/Sprites/bio.png"));
+        diccionario.agregar(c.getFisico(), new Image("file:src/main/java/Sprites/fis.png"));
+        diccionario.agregar(c.getQuimico(), new Image("file:src/main/java/Sprites/qui.png"));
+        diccionario.agregar(c.getIngeniero(), new Image("file:src/main/java/Sprites/ing.png"));
+        diccionario.agregar(c.getMatematico(), new Image("file:src/main/java/Sprites/mat.png"));
+        diccionario.agregar(l.getFilologo(), new Image("file:src/main/java/Sprites/fil.png"));
+        diccionario.agregar(l.getFilosofo(), new Image("file:src/main/java/Sprites/phi.png"));
+        diccionario.agregar(l.getTeologo(), new Image("file:src/main/java/Sprites/teo.png"));
+        diccionario.agregar(l.getHistoriador(), new Image("file:src/main/java/Sprites/his.png"));
+        diccionario.agregar(l.getTraductor(), new Image("file:src/main/java/Sprites/tra.png"));
+
+        return diccionario;
+    }
 
     public boolean colocarUnidad(Unidades u, int x, int y){
         if(tablero[x][y] == null){
             tablero[x][y] = u;
+            Image spriteUnidadTemp = getDiccionarioUnidadesImagen().get(u);
+            ImageView spriteUnidad = new ImageView(spriteUnidadTemp);
+            spriteUnidad.setFitHeight(30);
+            spriteUnidad.setFitWidth(30);
+            Button botonUnidad = new Button();
+            botonUnidad.setPrefSize(30, 30);
+            botonUnidad.setGraphic(spriteUnidad);
+            botonUnidad.setAlignment(Pos.CENTER);
+            gridPane.add(botonUnidad, x, y);
+
             int[] casilla = new int[]{x, y};
             listaTodasLasUnidades.agregar(u, casilla);
             if(propiedadCasilla(casilla).equals("+10HP")) u.subirHP(10);
@@ -111,7 +146,7 @@ public class Partida {
         while(it.hasNext()){
             if(it.next().getCoordenadas() == casilla) return it.next().getPropiedad();
         }
-        return null;
+        return "null";
     }
     public int[] buscarUnidad(Unidades u){
         return listaTodasLasUnidades.get(u);
@@ -128,7 +163,8 @@ public class Partida {
         int[] uPosInicial = buscarUnidad(u);
         tablero[x][y] = u;
         tablero[uPosInicial[0]][uPosInicial[1]] = null;
-        log.info("El" + u + "se ha movido a la casilla" + x +"," + y + "en el turno" + turno);
+        gridPane.add(null, uPosInicial[0], uPosInicial[1]);
+        log.info("El {} se ha movido a la casilla {},{} en el turno {}", u, x, y, turno);
         return true;
 
     }
@@ -152,15 +188,16 @@ public class Partida {
         double factorAleatorio = Math.random() * 2;
         double danoInfligido = Math.abs(factorAleatorio*atacante.getAtaque() - atacado.getDefensa());
         atacado.subirHP(-danoInfligido);
-        log.info("El" + atacante + "le ha inflingido un daño de " + danoInfligido + "al" + atacado);
+        log.info("El {} le ha inflingido un daño de {} al {}", atacante, danoInfligido, atacado);
         if(atacado.isUnidadMuerta()){
             int[] atacadoPos = buscarUnidad(atacado);
-            log.info("El" + atacado + "ha muerto");
             tablero[atacadoPos[0]][atacadoPos[1]] = null;
             listaTodasLasUnidades.delete(atacado);
+            gridPane.add(null, buscarUnidad(atacado)[0], buscarUnidad(atacado)[1]);
+            log.info("El {} ha muerto", atacado);
         }
         else{
-            log.info("El"+ atacado + "tiene" + atacado.isUnidadMuerta() + "de vida");
+            log.info("El {} tiene {} de vida", atacado, atacado.getHP());
         }
         return true;
     }
@@ -169,7 +206,7 @@ public class Partida {
         Unidades u = lista.random();
         int randX = Math.round((float) Math.random()*(tableroAncho-1));
         int randY = Math.round((float) Math.random()*(tableroAlto-1));
-        log.info("Se ha generado un" + u + "en la casilla" + randX + "," + randY);
+        log.info("Se ha generado un {} en la casilla {},{}", u, randX, randY);
         return colocarUnidad(u, randX, randY);
     }
 
@@ -190,11 +227,14 @@ public class Partida {
             colocarUnidad(c2, tableroAncho-1, tableroAlto-1);
         }
         log.info("La partida ha comenzado");
-        log.info("El tablero es" + tableroAncho + "x" + tableroAlto);
+        log.info("El tablero es {}x{}", tableroAncho, tableroAlto);
     }
     public boolean finPartida(){
-        return generarGrafoUnidades(true) == null || generarGrafoUnidades(false) == null;
-        log.info ("Fin de partida");
+        if(generarGrafoUnidades(true) == null || generarGrafoUnidades(false) == null){
+            log.info("Fin de partida");
+            return true;
+        }
+        return false;
     }
 
     public void transcursoPartida(boolean jugadorEsDeCiencias){ //esto iría en el controlador
@@ -223,7 +263,7 @@ public class Partida {
         return Math.abs(uPos[0] - vPos[0]) + Math.abs(uPos[1] - vPos[1]);
     }
     public DiccionarioBasico<Unidades, int[]> getDiccionarioUnidadesTablero(boolean esDeCiencias){
-        Iterador<Unidades> it = listaTodasLasUnidades.getIterador();
+        Iterador<Diccionario<Unidades, int[]>> it = listaTodasLasUnidades.getIterador();
         DiccionarioBasico<Unidades, int[]> diccionarioUnidadesTablero = new DiccionarioBasico<>();
 
         if(listaTodasLasUnidades.getCabeza().getClave().isDeCiencias() == esDeCiencias) {
@@ -231,7 +271,7 @@ public class Partida {
                     listaTodasLasUnidades.getCabeza().getValor());
         }
         while(it.hasNext()){
-            Unidades u = it.next();
+            Unidades u = it.next().getClave();
             if(u.isDeCiencias() == esDeCiencias) diccionarioUnidadesTablero.agregar(u, listaTodasLasUnidades.get(u));
         }
         return diccionarioUnidadesTablero;
@@ -288,18 +328,18 @@ public class Partida {
             grafoUnidades.addArista(primerVertice, new Vertice<>(cabezaJugador),
                     getDistancia(primerVertice.getValor(), cabezaJugador));
 
-            Iterador<Unidades> itJ1 = diccionarioUnidadesTableroJugador.getIterador();
+            Iterador<Diccionario<Unidades, int[]>> itJ1 = diccionarioUnidadesTableroJugador.getIterador();
             while(itJ1.hasNext()){
-                Unidades u = itJ1.next();
+                Unidades u = itJ1.next().getClave();
                 grafoUnidades.addArista(primerVertice, new Vertice<>(u), getDistancia(primerVertice.getValor(), u));
             }
-            Iterador<Unidades> itIA1 = diccionarioUnidadesTableroIA.getIterador();
+            Iterador<Diccionario<Unidades, int[]>> itIA1 = diccionarioUnidadesTableroIA.getIterador();
             while(itIA1.hasNext()){
-                Unidades u = itIA1.next();
+                Unidades u = itIA1.next().getClave();
                 grafoUnidades.addArista(new Vertice<>(u), new Vertice<>(cabezaJugador), getDistancia(u, cabezaJugador));
-                Iterador<Unidades> itJ2 = diccionarioUnidadesTableroJugador.getIterador();
+                Iterador<Diccionario<Unidades, int[]>> itJ2 = diccionarioUnidadesTableroJugador.getIterador();
                 while(itJ2.hasNext()){
-                    Unidades v = itJ2.next();
+                    Unidades v = itJ2.next().getClave();
                     grafoUnidades.addArista(new Vertice<>(u), new Vertice<>(v), getDistancia(u, v));
                 }
             }
