@@ -12,6 +12,8 @@ import controlPartida.*;
 
 import java.io.IOException;
 public class BandoControllerCiencias {
+    int Ancho;
+    Boolean esDeCiencias;
     @FXML
     private Button EmpezarPartida;
     @FXML
@@ -21,8 +23,6 @@ public class BandoControllerCiencias {
 
     @FXML
     public void onEmpezarPartidaClick(ActionEvent actionEvent){
-        Partida partida = new Partida(8, 8, true);
-        partida.iniciarPartida();
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("/org/example/juegogui/pantalla-partida.fxml"));
             Scene scene = new Scene(fxmlLoader.load(), 640, 480);
@@ -30,6 +30,7 @@ public class BandoControllerCiencias {
             stage.setTitle("CONQUISTA");
             stage.setScene(scene);
             stage.show();
+            this.esDeCiencias = true;
         }
         catch (IOException e) {
             e.printStackTrace();
@@ -50,5 +51,13 @@ public class BandoControllerCiencias {
             System.err.println("Error al cargar la pantalla principal");
         }
     }
-
+    public void onOchoClick(){
+        this.Ancho = 8;
+    }
+    public void onDiezClick(){
+        this.Ancho = 10;
+    }
+    public void onQuinceClick(){
+        this.Ancho = 15;
+    }
 }
