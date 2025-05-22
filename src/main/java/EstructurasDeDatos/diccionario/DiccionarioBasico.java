@@ -54,4 +54,19 @@ public class DiccionarioBasico<K, V> {
     public Iterador<Diccionario<K, V>> getIterador(){
         return new IteradorListaDE<>(lista.getCabeza());
     }
+
+    public K getClaveIndice(int index){
+        if(index == 0) return getCabeza().getClave();
+        Iterador<Diccionario<K, V>> it = getIterador();
+        int cont = 1;
+        while(it.hasNext()){
+            K clave = it.next().getClave();
+            if(cont == index) return clave;
+            cont++;
+        }
+        return null;
+    }
+    public int getNumElementos(){
+        return lista.getNumElementos();
+    }
 }

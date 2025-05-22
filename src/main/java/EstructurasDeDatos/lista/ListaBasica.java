@@ -31,8 +31,9 @@ public class ListaBasica<T> implements Lista<T> {
     public boolean delete(T elemento) {
         int posicion = buscar(elemento);
         if(posicion == -1) return false;
-        while(getIterador().hasNext()){
+        while(posicion < numElementos){
             array[posicion] = array[posicion+1];
+            posicion++;
         }
         numElementos--;
         return true;
@@ -60,15 +61,16 @@ public class ListaBasica<T> implements Lista<T> {
         }
         return array_aux;
     }
-    public int buscar(T elemento){
-        IteradorListaBasica<T> it = new IteradorListaBasica<>(this);
-        while(it.hasNext() && array[it.contador] != elemento){
-            it.next();
+    public int buscar(T elemento) {
+        Iterador<T> it = getIterador();
+        if (array[0] == elemento) return 0;
+        int cont = 1;
+        while (it.hasNext()) {
+            T e = it.next();
+            if (e == elemento) return cont;
+            cont++;
         }
-        if(!it.hasNext()){
-            System.out.println("El elemento no está en la lista");
-            return -1;
-        }else return it.contador;
+        return -1;
     }
     public T get(int indice){
         if(indice == 0) return array[0];
