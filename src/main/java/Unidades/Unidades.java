@@ -7,14 +7,19 @@ public class Unidades {
     private int rango_movimiento;
     private int rango_ataque;
     private boolean esDeCiencias;
+    private String nombre;
 
-    public Unidades(int HP, int ataque, int defensa, int rango_movimiento, int rango_ataque, boolean esDeCiencias) {
+    public Unidades(String nombre, int HP, int ataque, int defensa, int rango_movimiento, int rango_ataque, boolean esDeCiencias) {
         this.HP = HP;
         this.ataque = ataque;
         this.defensa = defensa;
         this.rango_movimiento = rango_movimiento;
         this.rango_ataque = rango_ataque;
         this.esDeCiencias = esDeCiencias;
+        this.nombre = nombre;
+    }
+    public String getNombre(){
+        return nombre;
     }
     public double getHP() {
         return HP;

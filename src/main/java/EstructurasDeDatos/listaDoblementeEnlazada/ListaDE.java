@@ -1,6 +1,5 @@
 package EstructurasDeDatos.listaDoblementeEnlazada;
 import EstructurasDeDatos.*;
-import EstructurasDeDatos.listaSimplementeEnlazada.ListaSE;
 
 public class ListaDE<T> implements Lista<T> {
     private ElementoDoble<T> cabeza;
@@ -16,12 +15,16 @@ public class ListaDE<T> implements Lista<T> {
     public ElementoDoble<T> getCola(){
         return cola;
     }
-    public ListaSE<T> convertToListaSE(){
-        return new ListaSE<>(cabeza);
-    }
     @Override
     public int getNumElementos(){
-        return convertToListaSE().getNumElementos();
+        int cont = 0;
+        if(cabeza == null) return 0;
+        ElementoDoble<T> actual = cabeza;
+        while(actual != null){
+            actual = actual.getSiguiente();
+            cont++;
+        }
+        return cont;
     }
 
     @Override
@@ -31,10 +34,13 @@ public class ListaDE<T> implements Lista<T> {
     @Override
     public boolean add(T valor) {
         /** equivalente a añadir al final**/
+        ElementoDoble<T> nuevoElemento = new ElementoDoble<>(valor);
         if(estaVacia()){
-            cabeza = cola = new ElementoDoble<>(valor);
+            cabeza = cola = nuevoElemento;
         }else{
-            cola.setSiguiente(new ElementoDoble<>(valor));
+            cola.setSiguiente(nuevoElemento);
+            nuevoElemento.setAnterior(cola);
+            cola = nuevoElemento;
         }
         return true;
     }
