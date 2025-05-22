@@ -4,6 +4,7 @@ module org.example.juegogui {
     requires com.google.gson;
     requires org.apache.logging.log4j.core;
     requires org.apache.logging.log4j;
+    requires java.desktop;
 
 
     opens org.example.juegogui to javafx.fxml;

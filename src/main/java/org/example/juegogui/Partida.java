@@ -11,6 +11,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -20,13 +21,15 @@ import org.apache.logging.log4j.*;
 
 public class Partida {
     private static final Logger log = LogManager.getLogger(Partida.class);
-    private int turno;
-    private int tableroAncho;
-    private int tableroAlto;
-    private Unidades[][] tablero;
-    private DiccionarioBasico<Unidades, int[]> listaTodasLasUnidades = new DiccionarioBasico<>();
+    protected int turno;
+    protected int tableroAncho;
+    protected int tableroAlto;
+    protected Unidades[][] tablero;
+    protected DiccionarioBasico<Unidades, int[]> listaTodasLasUnidades = new DiccionarioBasico<>();
+    protected ListaBasica<Button> listaBotones = new ListaBasica<>(1);
 
-    private GridPane gridPane = new GridPane();
+    @FXML
+    protected GridPane gridPane = new GridPane();
 
     public Partida(int tableroAncho, int tableroAlto, boolean jugadorEsDeCiencias){
         this.tableroAncho = tableroAncho;
@@ -68,21 +71,21 @@ public class Partida {
         }
         return lista;
     }
-    public DiccionarioBasico<Unidades, Image> getDiccionarioUnidadesImagen(){
-        DiccionarioBasico<Unidades, Image> diccionario = new DiccionarioBasico<>();
+    public DiccionarioBasico<String, ImageView> getDiccionarioUnidadesImagen(){
+        DiccionarioBasico<String, ImageView> diccionario = new DiccionarioBasico<>();
 
         Ciencias c = new Ciencias();
         Letras l = new Letras();
-        diccionario.agregar(c.getBiologo(), new Image("file:src/main/java/Sprites/bio.png"));
-        diccionario.agregar(c.getFisico(), new Image("file:src/main/java/Sprites/fis.png"));
-        diccionario.agregar(c.getQuimico(), new Image("file:src/main/java/Sprites/qui.png"));
-        diccionario.agregar(c.getIngeniero(), new Image("file:src/main/java/Sprites/ing.png"));
-        diccionario.agregar(c.getMatematico(), new Image("file:src/main/java/Sprites/mat.png"));
-        diccionario.agregar(l.getFilologo(), new Image("file:src/main/java/Sprites/fil.png"));
-        diccionario.agregar(l.getFilosofo(), new Image("file:src/main/java/Sprites/phi.png"));
-        diccionario.agregar(l.getTeologo(), new Image("file:src/main/java/Sprites/teo.png"));
-        diccionario.agregar(l.getHistoriador(), new Image("file:src/main/java/Sprites/his.png"));
-        diccionario.agregar(l.getTraductor(), new Image("file:src/main/java/Sprites/tra.png"));
+        diccionario.agregar    (c.getBiologo().getNombre(), new ImageView(new Image("file:src/main/java/Sprites/bio.png")));
+        diccionario.agregar     (c.getFisico().getNombre(), new ImageView(new Image("file:src/main/java/Sprites/fis.png")));
+        diccionario.agregar    (c.getQuimico().getNombre(), new ImageView(new Image("file:src/main/java/Sprites/qui.png")));
+        diccionario.agregar  (c.getIngeniero().getNombre(), new ImageView(new Image("file:src/main/java/Sprites/ing.png")));
+        diccionario.agregar (c.getMatematico().getNombre(), new ImageView(new Image("file:src/main/java/Sprites/mat.png")));
+        diccionario.agregar   (l.getFilologo().getNombre(), new ImageView(new Image("file:src/main/java/Sprites/fil.png")));
+        diccionario.agregar   (l.getFilosofo().getNombre(), new ImageView(new Image("file:src/main/java/Sprites/phi.png")));
+        diccionario.agregar    (l.getTeologo().getNombre(), new ImageView(new Image("file:src/main/java/Sprites/teo.png")));
+        diccionario.agregar(l.getHistoriador().getNombre(), new ImageView(new Image("file:src/main/java/Sprites/his.png")));
+        diccionario.agregar  (l.getTraductor().getNombre(), new ImageView(new Image("file:src/main/java/Sprites/tra.png")));
 
         return diccionario;
     }
@@ -90,15 +93,12 @@ public class Partida {
     public boolean colocarUnidad(Unidades u, int x, int y){
         if(tablero[x][y] == null){
             tablero[x][y] = u;
-            Image spriteUnidadTemp = getDiccionarioUnidadesImagen().get(u);
-            ImageView spriteUnidad = new ImageView(spriteUnidadTemp);
-            spriteUnidad.setFitHeight(30);
-            spriteUnidad.setFitWidth(30);
+            ImageView spriteUnidad = getDiccionarioUnidadesImagen().get(u.getNombre());
             Button botonUnidad = new Button();
+            gridPane.add(botonUnidad, x, y);
             botonUnidad.setPrefSize(30, 30);
             botonUnidad.setGraphic(spriteUnidad);
-            botonUnidad.setAlignment(Pos.CENTER);
-            gridPane.add(botonUnidad, x, y);
+            listaBotones.add(botonUnidad);
 
             int[] casilla = new int[]{x, y};
             listaTodasLasUnidades.agregar(u, casilla);
@@ -161,7 +161,7 @@ public class Partida {
     public boolean moverUnidad(Unidades u, int x, int y){
         if(!sePuedeMoverA(u, x, y)) return false;
         int[] uPosInicial = buscarUnidad(u);
-        tablero[x][y] = u;
+        colocarUnidad(u, x, y);
         tablero[uPosInicial[0]][uPosInicial[1]] = null;
         gridPane.add(null, uPosInicial[0], uPosInicial[1]);
         log.info("El {} se ha movido a la casilla {},{} en el turno {}", u, x, y, turno);
@@ -188,7 +188,7 @@ public class Partida {
         double factorAleatorio = Math.random() * 2;
         double danoInfligido = Math.abs(factorAleatorio*atacante.getAtaque() - atacado.getDefensa());
         atacado.subirHP(-danoInfligido);
-        log.info("El {} le ha inflingido un daño de {} al {}", atacante, danoInfligido, atacado);
+        log.info("El {} le ha infligido un daño de {} al {}", atacante, danoInfligido, atacado);
         if(atacado.isUnidadMuerta()){
             int[] atacadoPos = buscarUnidad(atacado);
             tablero[atacadoPos[0]][atacadoPos[1]] = null;
@@ -216,15 +216,15 @@ public class Partida {
         Unidades l1 = getListaUnidades(false).random();
         Unidades l2 = getListaUnidades(false).random();
         if(turno == 0){
-            colocarUnidad(c1, 0, 0);
-            colocarUnidad(c2, 0, tableroAlto-1);
-            colocarUnidad(l1, tableroAncho-1, 0);
-            colocarUnidad(l2, tableroAncho-1, tableroAlto-1);
-        }else if(turno == 1){
-            colocarUnidad(l1, 0, 0);
-            colocarUnidad(l2, 0, tableroAlto-1);
-            colocarUnidad(c1, tableroAncho-1, 0);
+            colocarUnidad(c1, 0, tableroAlto-1);
             colocarUnidad(c2, tableroAncho-1, tableroAlto-1);
+            colocarUnidad(l1, 0, 0);
+            colocarUnidad(l2, tableroAncho-1, 0);
+        }else if(turno == 1){
+            colocarUnidad(l1, 0, tableroAlto-1);
+            colocarUnidad(l2, tableroAncho-1, tableroAlto-1);
+            colocarUnidad(c1, 0, 0);
+            colocarUnidad(c2, tableroAncho-1, 0);
         }
         log.info("La partida ha comenzado");
         log.info("El tablero es {}x{}", tableroAncho, tableroAlto);
