@@ -357,13 +357,6 @@ public class PartidaControlador {
         hboxAcciones.setPrefSize(470, 87);
         hboxAcciones.setAlignment(Pos.CENTER_LEFT);
 
-        // Botón de pausa
-        Button btnPausa = new Button("| |");
-        btnPausa.setFont(Font.font("System Bold", 30));
-        btnPausa.setPrefSize(69, 69);
-        btnPausa.setLayoutX(14);
-        btnPausa.setLayoutY(14);
-
         // Agregar todo al VBox principal
         panelLateral.getChildren().addAll(
                 hboxTurno, hboxUnidad,
