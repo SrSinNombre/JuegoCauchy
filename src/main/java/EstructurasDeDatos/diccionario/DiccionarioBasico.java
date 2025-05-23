@@ -69,4 +69,13 @@ public class DiccionarioBasico<K, V> {
     public int getNumElementos(){
         return lista.getNumElementos();
     }
+    public K buscar(V valor){
+        Iterador<Diccionario<K, V>> it = getIterador();
+        if(lista.getCabeza().getDato().getValor().equals(valor)) return lista.getCabeza().getDato().getClave();
+        while(it.hasNext()){
+            Diccionario<K, V> elemento = it.next();
+            if(elemento.getValor().equals(valor)) return elemento.getClave();
+        }
+        return null;
+    }
 }

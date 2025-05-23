@@ -26,7 +26,7 @@ public class Partida {
     protected int tableroAlto;
     protected Unidades[][] tablero;
     protected DiccionarioBasico<Unidades, int[]> listaTodasLasUnidades = new DiccionarioBasico<>();
-    protected ListaBasica<Button> listaBotones = new ListaBasica<>(1);
+
 
     @FXML
     protected GridPane gridPane = new GridPane();
@@ -98,7 +98,6 @@ public class Partida {
             gridPane.add(botonUnidad, x, y);
             botonUnidad.setPrefSize(30, 30);
             botonUnidad.setGraphic(spriteUnidad);
-            listaBotones.add(botonUnidad);
 
             int[] casilla = new int[]{x, y};
             listaTodasLasUnidades.agregar(u, casilla);
@@ -163,7 +162,6 @@ public class Partida {
         int[] uPosInicial = buscarUnidad(u);
         colocarUnidad(u, x, y);
         tablero[uPosInicial[0]][uPosInicial[1]] = null;
-        gridPane.add(null, uPosInicial[0], uPosInicial[1]);
         log.info("El {} se ha movido a la casilla {},{} en el turno {}", u, x, y, turno);
         return true;
 

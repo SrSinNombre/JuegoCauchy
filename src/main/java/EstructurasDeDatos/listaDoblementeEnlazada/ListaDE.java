@@ -58,32 +58,34 @@ public class ListaDE<T> implements Lista<T> {
     }
     @Override
     public boolean delete(T elemento) {
-        if(!estaVacia()){
-            if (elemento == cola.getDato()) deleteCola();
-            else if (elemento == cabeza.getDato()) deleteCabeza();
-
-            ElementoDoble<T> e = new ElementoDoble<>(elemento);
-            ElementoDoble<T> actual = cabeza.getSiguiente();
-            while(actual != e){
-                actual = actual.getSiguiente();
-                if(actual == cola){
-                    System.out.print("El elemento no está en la lista");
-                    return false;
+        if (estaVacia()) {
+            System.out.println("La lista está vacía");
+            return false;
+        }
+        ElementoDoble<T> actual = cabeza;
+        while (actual != null) {
+            if (actual.getDato().equals(elemento)) {
+                // Caso: es la cabeza
+                if (actual == cabeza) {
+                    deleteCabeza();
                 }
-            } //busca el elemento a eliminar
-            ElementoDoble<T> siguiente = actual.getSiguiente();
-            while(siguiente.getAnterior() /*otra forma de llamar a actual*/ != cola){
-                siguiente.setAnterior(siguiente);
-                siguiente = siguiente.getSiguiente(); //en el primer bucle actual ya está sobrescrito, es decir, borrado
+                // Caso: es la cola
+                else if (actual == cola) {
+                    deleteCola();
+                }
+                // Caso general
+                else {
+                    actual.getAnterior().setSiguiente(actual.getSiguiente());
+                    actual.getSiguiente().setAnterior(actual.getAnterior());
+                }
+                return true;
             }
-            deleteCola();
-            return true;
+            actual = actual.getSiguiente();
         }
-        else{
-            System.out.println("La lista esta vacía");
-            return estaVacia();
-        }
+        System.out.println("El elemento no está en la lista");
+        return false;
     }
+
     public void imprimir(){
         ElementoDoble<T> actual = cabeza;
         while(actual != cola){

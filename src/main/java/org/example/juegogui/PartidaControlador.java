@@ -1,5 +1,10 @@
 package org.example.juegogui;
 
+import EstructurasDeDatos.Iterador;
+import EstructurasDeDatos.diccionario.Diccionario;
+import EstructurasDeDatos.diccionario.DiccionarioBasico;
+import EstructurasDeDatos.lista.ListaBasica;
+import EstructurasDeDatos.listaDoblementeEnlazada.IteradorListaDE;
 import Unidades.Unidades;
 import javafx.beans.InvalidationListener;
 import javafx.beans.property.IntegerProperty;
@@ -8,7 +13,9 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -16,10 +23,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -32,6 +36,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.ResourceBundle;
 
 public class PartidaControlador {
@@ -40,14 +45,34 @@ public class PartidaControlador {
     @FXML
     private Label seleccionaTamanno;
     protected int tamannoTablero;
+    protected int tamannoCasilla;
 
     private final Label labelTurno = new Label();
+    Label labelUnidad = new Label();
+    Label labelHP = new Label();
+    Label labelAT = new Label();
+    Label labelDF = new Label();
+    Label labelRangoAtaque = new Label();
+    Label labelRangoMovimiento = new Label();
+    ProgressBar barraVida = new ProgressBar();
+    Button btnMover = new Button("Mover");
+    Button btnAtacar = new Button("Atacar");
+
+    TextField textFieldCoordX = new TextField();
+    TextField textFieldCoordY = new TextField();
+    Button validarMovimiento = new Button();
 
     private Button botonPausa;
 
-    Partida partida;
+    protected Partida partida;
+    protected DiccionarioBasico<CheckBox, int[]> diccionarioBotones = new DiccionarioBasico<>();
+    boolean jugadorEsDeCiencias;
+    private Unidades u;
+    private CheckBox unidadSeleccionada;
 
     ObjectProperty<Unidades> unidad = new SimpleObjectProperty<>();
+
+    protected static int turno;
 
 
     //pantalla principal
@@ -181,15 +206,19 @@ public class PartidaControlador {
         opcion8x8.setSelected(false);
     }
 
-    public boolean colocarUnidad(Unidades u, int x, int y){
+    public boolean colocarUnidad(GridPane gridPane, Unidades u, int x, int y){
         if(partida.tablero[x][y] == null){
             partida.tablero[x][y] = u;
             ImageView spriteUnidad = partida.getDiccionarioUnidadesImagen().get(u.getNombre());
-            Button botonUnidad = new Button();
-            partida.gridPane.add(botonUnidad, x, y);
-            botonUnidad.setPrefSize(30, 30);
-            botonUnidad.setGraphic(spriteUnidad);
-            botonUnidad.setOnAction(this::onUnidadClick);
+            AnchorPane anchorPane = new AnchorPane();
+            anchorPane.setStyle("-fx-background-color: white");
+            anchorPane.getChildren().add(spriteUnidad);
+            CheckBox checkBox = new CheckBox();
+            gridPane.add(checkBox, x, y);
+            checkBox.setGraphic(anchorPane);
+            checkBox.setOnAction(this::onUnidadClick);
+
+            diccionarioBotones.agregar(checkBox, new int[]{x, y});
 
 
             int[] casilla = new int[]{x, y};
@@ -205,27 +234,28 @@ public class PartidaControlador {
         }else return false;
     }
 
-    public void iniciarPartida(boolean jugadorEsDeCiencias){
+    public void iniciarPartida(GridPane gridPane, boolean jugadorEsDeCiencias){
         partida = new Partida(tamannoTablero, tamannoTablero, jugadorEsDeCiencias);
+        this.jugadorEsDeCiencias = jugadorEsDeCiencias;
         Unidades c1 = partida.getListaUnidades(true).random();
         Unidades c2 = partida.getListaUnidades(true).random();
         Unidades l1 = partida.getListaUnidades(false).random();
         Unidades l2 = partida.getListaUnidades(false).random();
         if(partida.turno == 0){
-            partida.colocarUnidad(c1, 0, tamannoTablero-1);
-            partida.colocarUnidad(c2, tamannoTablero-1, tamannoTablero-1);
-            partida.colocarUnidad(l1, 0, 0);
-            partida.colocarUnidad(l2, tamannoTablero-1, 0);
+            colocarUnidad(gridPane, c1, 0, tamannoTablero-1);
+            colocarUnidad(gridPane, c2, tamannoTablero-1, tamannoTablero-1);
+            colocarUnidad(gridPane, l1, 0, 0);
+            colocarUnidad(gridPane, l2, tamannoTablero-1, 0);
         }else if(partida.turno == 1){
-            partida.colocarUnidad(l1, 0, tamannoTablero-1);
-            partida.colocarUnidad(l2, tamannoTablero-1, tamannoTablero-1);
-            partida.colocarUnidad(c1, 0, 0);
-            partida.colocarUnidad(c2, tamannoTablero-1, 0);
+            colocarUnidad(gridPane, l1, 0, tamannoTablero-1);
+            colocarUnidad(gridPane, l2, tamannoTablero-1, tamannoTablero-1);
+            colocarUnidad(gridPane, c1, 0, 0);
+            colocarUnidad(gridPane, c2, tamannoTablero-1, 0);
         }
+        turno = partida.turno;
     }
 
     public void onEmpezarPartidaCienciasClick(ActionEvent actionEvent){
-        int tamannoCasilla = 0;
         if(opcion8x8.isSelected()) {
             tamannoTablero = 8;
             tamannoCasilla = 75;
@@ -261,7 +291,7 @@ public class PartidaControlador {
             }
         }
 
-        partida.iniciarPartida();
+        iniciarPartida(tablero, true);
         tablero.setGridLinesVisible(true);
         tablero.setLayoutX(650);
         tablero.setLayoutY(84);
@@ -288,10 +318,11 @@ public class PartidaControlador {
         Label labelTurnoTexto = new Label("Turno número: ");
         labelTurnoTexto.setFont(new Font(35));
         labelTurnoTexto.setPrefSize(308, 55);
-        Label labelTurno = new Label("Turno");
         labelTurno.setFont(new Font(35));
         labelTurno.setPrefSize(164, 55);
+        labelTurno.setText(Integer.toString(turno));
         hboxTurno.getChildren().addAll(labelTurnoTexto, labelTurno);
+        //tengo que bindear labelturno con partida.turno
 
         // HBox: Unidad seleccionada
         HBox hboxUnidad = new HBox();
@@ -299,10 +330,10 @@ public class PartidaControlador {
         Label labelUnidadTexto = new Label("Unidad seleccionada:");
         labelUnidadTexto.setFont(new Font(31));
         labelUnidadTexto.setPrefSize(308, 55);
-        Label labelUnidad = new Label("Unidad");
         labelUnidad.setFont(new Font(35));
         labelUnidad.setPrefSize(164, 55);
         hboxUnidad.getChildren().addAll(labelUnidadTexto, labelUnidad);
+        //tengo que bindear labelUnidad con u.getNombre()
 
         // Estadísticas
         Label labelStats = new Label("ESTADÍSTICAS:");
@@ -315,43 +346,41 @@ public class PartidaControlador {
         labelVida.setFont(Font.font("System Bold Italic", 23));
         labelVida.setTextFill(javafx.scene.paint.Color.RED);
         labelVida.setPrefSize(256, 54);
-        ProgressBar barraVida = new ProgressBar(0.0);
         barraVida.setPrefWidth(200);
-        HBox hboxVida = new HBox(new AnchorPane(new ImageView(new Image("file:src/main/java/Sprites/hpt.png"))), barraVida);
+        HBox hboxVida = new HBox(new AnchorPane(new ImageView(new Image("file:src/main/java/Sprites/hpt.png"))), barraVida, labelHP);
         hboxVida.setAlignment(Pos.CENTER);
         hboxVida.setPrefSize(470, 50);
+        //bindear labelHP cpn u.getHP()
 
         // ATAQUE
         Label labelAtaque = new Label("ATAQUE");
         labelAtaque.setFont(Font.font("System Bold Italic", 23));
         labelAtaque.setTextFill(javafx.scene.paint.Color.LIME);
-        labelAtaque.setPrefSize(256, 54);
-        ProgressBar barraAtaque = new ProgressBar(0.0);
-        barraAtaque.setPrefWidth(200);
-        HBox hboxAtaque = new HBox(new AnchorPane(new ImageView(new Image("file:src/main/java/Sprites/atq.png"))), barraAtaque);
+        labelAtaque.setPrefSize(256, 54);;
+        HBox hboxAtaque = new HBox(new AnchorPane(new ImageView(new Image("file:src/main/java/Sprites/atq.png"))), labelAT);
         hboxAtaque.setAlignment(Pos.CENTER);
         hboxAtaque.setPrefSize(470, 50);
+        //bindear labelAT con u.getAtaque()
 
         // DEFENSA
         Label labelDefensa = new Label("DEFENSA");
         labelDefensa.setFont(Font.font("System Bold Italic", 23));
         labelDefensa.setTextFill(javafx.scene.paint.Color.BLUE);
         labelDefensa.setPrefSize(256, 54);
-        ProgressBar barraDefensa = new ProgressBar(0.0);
-        barraDefensa.setPrefWidth(200);
-        HBox hboxDefensa = new HBox(new AnchorPane(new ImageView(new Image("file:src/main/java/Sprites/def.png"))), barraDefensa);
+        HBox hboxDefensa = new HBox(new AnchorPane(new ImageView(new Image("file:src/main/java/Sprites/def.png"))), labelDF);
         hboxDefensa.setAlignment(Pos.CENTER);
         hboxDefensa.setPrefSize(470, 50);
+        //bindear labelDF con u.getDefensa()
 
         // Rango de ataque y movimiento + botones
-        VBox vboxAtaque = new VBox(new Label("Rango de ataque:"), new Label("rango"));
+        VBox vboxAtaque = new VBox(new Label("Rango de ataque:"), labelRangoAtaque);
         vboxAtaque.setPrefSize(109, 87);
-        VBox vboxMovimiento = new VBox(new Label("Rango de movimiento:"), new Label("rango"));
+        VBox vboxMovimiento = new VBox(new Label("Rango de movimiento:"), labelRangoMovimiento);//bindear labelRangos con u.getRango...
         vboxMovimiento.setPrefSize(129, 87);
-        Button btnMover = new Button("Mover");
+
         btnMover.setPrefSize(76, 26);
         HBox.setMargin(btnMover, new Insets(0, 20, 0, 20));
-        Button btnAtacar = new Button("Atacar");
+
         btnAtacar.setPrefSize(76, 26);
         HBox hboxAcciones = new HBox(vboxAtaque, vboxMovimiento, btnMover, btnAtacar);
         hboxAcciones.setPrefSize(470, 87);
@@ -367,10 +396,30 @@ public class PartidaControlador {
                 hboxAcciones
         );
 
+        //campos de texto + boton validarMovimiento
+        textFieldCoordX.setPromptText("Introduce coordenada X...");
+        textFieldCoordX.setOpacity(0);
+        textFieldCoordX.setLayoutX(650);
+        textFieldCoordX.setLayoutY(706);
+        textFieldCoordX.setDisable(true);
+
+        textFieldCoordY.setPromptText("Introduce coordenada Y...");
+        textFieldCoordY.setOpacity(0);
+        textFieldCoordY.setLayoutX(834);
+        textFieldCoordY.setLayoutY(706);
+        textFieldCoordY.setDisable(true);
+
+        validarMovimiento.setText("Validar movimiento");
+        validarMovimiento.setOpacity(0);
+        validarMovimiento.setDisable(true);
+        validarMovimiento.setLayoutX(1033);
+        validarMovimiento.setLayoutY(706);
+
         // Añadir todos los elementos al AnchorPane raíz
         marco.getChildren().addAll(panelLateral);
         marco.getChildren().add(tablero);
         marco.getChildren().add(botonPausa);
+        marco.getChildren().addAll(textFieldCoordX, textFieldCoordY, validarMovimiento);
         Scene scene = new Scene(marco);
         Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
         stage.setTitle("CONQUISTA");
@@ -378,7 +427,168 @@ public class PartidaControlador {
         stage.show();
     }//esto mismo que he hecho si el usuario elige ciencias hay que hacerlo si el usuario elige letras, que lo haga otro
 
+
+    //metodo auxiliar
+    public void soloSeleccionarUnaUnidad(DiccionarioBasico<CheckBox, int[]> diccionario, CheckBox opcionSeleccionada){
+        for(int i = 0; i < diccionario.getNumElementos(); i++){
+            CheckBox c = diccionario.getClaveIndice(i);
+            if(c.isSelected() && !c.equals(opcionSeleccionada)){
+                c.setSelected(false);
+            }
+        }
+    }
+    public void rollback(){
+        labelUnidad.setText("");
+        labelRangoMovimiento.setText("");
+        labelDF.setText("");
+        labelHP.setText("");
+        labelAT.setText("");
+        labelRangoAtaque.setText("");
+        barraVida.setProgress(0);
+        btnMover.setDisable(true);
+        btnAtacar.setDisable(true);
+        unidadSeleccionada = null;
+        textFieldCoordX.setDisable(true);
+        textFieldCoordX.setOpacity(0);
+        textFieldCoordY.setDisable(true);
+        textFieldCoordY.setOpacity(0);
+        validarMovimiento.setDisable(true);
+        validarMovimiento.setOpacity(0);
+    }
+
     public void onUnidadClick(ActionEvent actionEvent){
+        try {
+            CheckBox miOpcion = null;
+            for(int i = 0; i < diccionarioBotones.getNumElementos(); i++){
+                CheckBox c = diccionarioBotones.getClaveIndice(i);
+                if(c.isSelected()){
+                    miOpcion = c;
+                    soloSeleccionarUnaUnidad(diccionarioBotones, miOpcion);
+                    break;
+                }
+            }
+            unidadSeleccionada = miOpcion;
+            int[] coordenadas = diccionarioBotones.get(unidadSeleccionada);
+            u = partida.tablero[coordenadas[0]][coordenadas[1]];
+            labelAT.setText(Integer.toString(u.getAtaque()));
+            labelDF.setText(Integer.toString(u.getDefensa()));
+            labelHP.setText(Double.toString(u.getHP()));
+            barraVida.setProgress(u.getHP()/150);
+            labelRangoAtaque.setText(Integer.toString(u.getRango_ataque()));
+            labelRangoMovimiento.setText(Integer.toString(u.getRango_movimiento()));
+            labelUnidad.setText(u.getNombre());
+            if(u.isDeCiencias() == jugadorEsDeCiencias){
+                btnMover.setOnAction(this::onMoverClick);
+                btnMover.setDisable(false);
+                btnAtacar.setOnAction(this::onAtacarClick);
+                btnAtacar.setDisable(false);
+            }else{
+                btnMover.setDisable(true);
+                btnAtacar.setDisable(true);
+            }
+        } catch (NullPointerException e) {
+            rollback();
+        }
+    }
+
+    public ListaBasica<int[]> getCasillasEnRg(int x, int y, int rango){
+        ListaBasica<int[]> lista = new ListaBasica<>(1);
+        for(int i = -rango; i <= rango; i++){
+            for(int j = -rango; j <= rango; j++){
+                if(i == 0 && j == 0) continue;
+                if((Math.abs(i) + Math.abs(j)) <= rango){
+                    lista.add(new int[]{x+i, y+j});
+                }
+            }
+        }
+        return lista;
+    }
+    public ListaBasica<int[]> getListaCasillasEnRgBueno(ListaBasica<int[]> lista){
+        ListaBasica<int[]> nuevaListaCasillas = new ListaBasica<>(1);
+
+        int numeroCasillas = lista.getNumElementos();
+        for(int i = 0; i < numeroCasillas; i++){
+            int[] casilla = lista.get(i);
+            if(!(casilla[0] < 0 || casilla[0] >= tamannoTablero || casilla[1] < 0 || casilla[1] >= tamannoTablero)){
+                nuevaListaCasillas.add(casilla);
+            }
+        }
+        return nuevaListaCasillas;
+    }
+    public void onMoverClick(ActionEvent actionEvent){
+
+        textFieldCoordX.setDisable(false);
+        textFieldCoordY.setDisable(false);
+        textFieldCoordX.setOpacity(1);
+        textFieldCoordY.setOpacity(1);
+        validarMovimiento.setDisable(false);
+        validarMovimiento.setOpacity(1);
+        validarMovimiento.setOnAction(this::onValidarMovimientoClick);
+
+    }
+    public boolean sePuedeMoverA(CheckBox opcionUnidad, int x, int y){
+        try {
+            int[] uPos = diccionarioBotones.get(opcionUnidad);
+            ListaBasica<int[]> lista = getCasillasEnRg(uPos[0], uPos[1], u.getRango_movimiento());
+            ListaBasica<int[]> listaBuena = getListaCasillasEnRgBueno(lista);
+            int numeroCasillas = listaBuena.getNumElementos();
+            int[] nuevaCasilla = new int[]{x, y};
+            for(int i = 0; i < numeroCasillas; i++){
+                if(Arrays.equals(nuevaCasilla, listaBuena.get(i))) return true;
+            }
+            return false;
+        } catch (NullPointerException e) {
+            rollback();
+            return false;
+        }
+    }
+    public boolean moverUnidad(CheckBox opcionUnidad, int x, int y){
+        if(!sePuedeMoverA(opcionUnidad, x, y)) return false;
+        int[] uPosInicial = diccionarioBotones.get(opcionUnidad);
+        GridPane.setConstraints(opcionUnidad, x, y);
+        partida.tablero[uPosInicial[0]][uPosInicial[1]] = null;
+        diccionarioBotones.delete(opcionUnidad);
+        diccionarioBotones.agregar(opcionUnidad, new int[]{x, y});
+        return true;
+
+    }
+    public void onValidarMovimientoClick(ActionEvent actionEvent){
+        String coordX = textFieldCoordX.getText().trim();
+        String coordY = textFieldCoordY.getText().trim();
+        try{
+            int x = Integer.parseInt(coordX);
+            int y = Integer.parseInt(coordY);
+            unidadSeleccionada.setSelected(false);
+            if(!sePuedeMoverA(unidadSeleccionada, x, y)){
+                VBox pantalla = new VBox();
+                Label label = new Label("No se puede mover la unidad a esa casilla, está fuera de rango");
+                pantalla.getChildren().add(label);
+                Stage stage = new Stage();
+                Scene scene = new Scene(pantalla, 200, 100);
+                stage.setTitle("Error");
+                stage.setScene(scene);
+                stage.show();
+            }else {
+                moverUnidad(unidadSeleccionada, x, y);
+                diccionarioBotones.agregar(unidadSeleccionada, new int[]{x, y});
+                colocarUnidad(partida.gridPane, u, x, y);
+                rollback();
+                turno++;
+                labelTurno.setText(Integer.toString(turno));
+            }
+        }catch(NumberFormatException e){
+            VBox pantalla = new VBox();
+            Label label = new Label("Introduce un número");
+            pantalla.getChildren().add(label);
+            Stage stage = new Stage();
+            Scene scene = new Scene(pantalla, 200, 100);
+            stage.setTitle("Error");
+            stage.setScene(scene);
+            stage.show();
+        }
+    }
+
+    public void onAtacarClick(ActionEvent actionEvent){
 
     }
 
