@@ -24,6 +24,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -206,9 +207,10 @@ public class PartidaControlador {
         opcion8x8.setSelected(false);
     }
 
-    public boolean colocarUnidad(GridPane gridPane, Unidades u, int x, int y){
+    public boolean colocarUnidad(GridPane gridPane, Unidades u, int x, int y){ //este es el método bueno, el otro se quita
         if(partida.tablero[x][y] == null){
             partida.tablero[x][y] = u;
+            partida.listaTodasLasUnidades.agregar(u, new int[]{x, y});
             ImageView spriteUnidad = partida.getDiccionarioUnidadesImagen().get(u.getNombre());
             AnchorPane anchorPane = new AnchorPane();
             anchorPane.setStyle("-fx-background-color: white");
@@ -234,7 +236,7 @@ public class PartidaControlador {
         }else return false;
     }
 
-    public void iniciarPartida(GridPane gridPane, boolean jugadorEsDeCiencias){
+    public void iniciarPartida(GridPane gridPane, boolean jugadorEsDeCiencias){//este es el método bueno, el otro se quita
         partida = new Partida(tamannoTablero, tamannoTablero, jugadorEsDeCiencias);
         this.jugadorEsDeCiencias = jugadorEsDeCiencias;
         Unidades c1 = partida.getListaUnidades(true).random();
@@ -290,6 +292,9 @@ public class PartidaControlador {
                 tablero.add(imageView, j, i);
             }
         }
+        AnchorPane cementerio = new AnchorPane(new Label("CEMEN-\nTERIO"));
+        cementerio.setPrefSize(tamannoCasilla, tamannoCasilla);
+        tablero.add(cementerio, 3, tamannoTablero);
 
         iniciarPartida(tablero, true);
         tablero.setGridLinesVisible(true);
@@ -400,20 +405,20 @@ public class PartidaControlador {
         textFieldCoordX.setPromptText("Introduce coordenada X...");
         textFieldCoordX.setOpacity(0);
         textFieldCoordX.setLayoutX(650);
-        textFieldCoordX.setLayoutY(706);
+        textFieldCoordX.setLayoutY(6);
         textFieldCoordX.setDisable(true);
 
         textFieldCoordY.setPromptText("Introduce coordenada Y...");
         textFieldCoordY.setOpacity(0);
         textFieldCoordY.setLayoutX(834);
-        textFieldCoordY.setLayoutY(706);
+        textFieldCoordY.setLayoutY(6);
         textFieldCoordY.setDisable(true);
 
         validarMovimiento.setText("Validar movimiento");
         validarMovimiento.setOpacity(0);
         validarMovimiento.setDisable(true);
         validarMovimiento.setLayoutX(1033);
-        validarMovimiento.setLayoutY(706);
+        validarMovimiento.setLayoutY(6);
 
         // Añadir todos los elementos al AnchorPane raíz
         marco.getChildren().addAll(panelLateral);
@@ -468,6 +473,10 @@ public class PartidaControlador {
                 }
             }
             unidadSeleccionada = miOpcion;
+            if(Arrays.equals(diccionarioBotones.get(unidadSeleccionada), new int[]{3, tamannoTablero})){
+                unidadSeleccionada.setSelected(false);
+                return;
+            }
             int[] coordenadas = diccionarioBotones.get(unidadSeleccionada);
             u = partida.tablero[coordenadas[0]][coordenadas[1]];
             labelAT.setText(Integer.toString(u.getAtaque()));
@@ -526,7 +535,7 @@ public class PartidaControlador {
         validarMovimiento.setOnAction(this::onValidarMovimientoClick);
 
     }
-    public boolean sePuedeMoverA(CheckBox opcionUnidad, int x, int y){
+    public boolean sePuedeMoverA(CheckBox opcionUnidad, int x, int y){//este es el método bueno, el otro se quita
         try {
             int[] uPos = diccionarioBotones.get(opcionUnidad);
             ListaBasica<int[]> lista = getCasillasEnRg(uPos[0], uPos[1], u.getRango_movimiento());
@@ -542,7 +551,7 @@ public class PartidaControlador {
             return false;
         }
     }
-    public boolean moverUnidad(CheckBox opcionUnidad, int x, int y){
+    public boolean moverUnidad(CheckBox opcionUnidad, int x, int y){//este es el método bueno, el otro se quita
         if(!sePuedeMoverA(opcionUnidad, x, y)) return false;
         int[] uPosInicial = diccionarioBotones.get(opcionUnidad);
         GridPane.setConstraints(opcionUnidad, x, y);
@@ -589,7 +598,78 @@ public class PartidaControlador {
     }
 
     public void onAtacarClick(ActionEvent actionEvent){
+        int[] coordenadas = diccionarioBotones.get(unidadSeleccionada);
+        ListaBasica<int[]> listaCasillas = getCasillasEnRg(coordenadas[0], coordenadas[1], u.getRango_ataque());
+        ListaBasica<int[]> listaCasillasBuenas = getListaCasillasEnRgBueno(listaCasillas);
+        int longitudLista = listaCasillasBuenas.getNumElementos();
+        for(int i = 0; i < longitudLista; i++){
+            int[] casilla = listaCasillasBuenas.get(i);
+            if(partida.tablero[casilla[0]][casilla[1]] != null && partida.tablero[casilla[0]][casilla[1]].isDeCiencias() != jugadorEsDeCiencias){
+                textFieldCoordX.setDisable(false);
+                textFieldCoordY.setDisable(false);
+                validarMovimiento.setDisable(false);
+                textFieldCoordX.setOpacity(1);
+                textFieldCoordY.setOpacity(1);
+                validarMovimiento.setOpacity(1);
+                validarMovimiento.setText("Validar ataque");
+                validarMovimiento.setOnAction(this::onValidarAtaqueClick);
+            }
+        }
+    }
 
+    public CheckBox buscarOpcionEn(int[] casilla){
+
+        if(Arrays.equals(diccionarioBotones.getCabeza().getValor(), casilla)) return diccionarioBotones.getCabeza().getClave();
+        Iterador<Diccionario<CheckBox, int[]>> it = diccionarioBotones.getIterador();
+        while(it.hasNext()){
+            Diccionario<CheckBox, int[]> elemento = it.next();
+            if(Arrays.equals(elemento.getValor(), casilla)) return elemento.getClave();
+        }
+        return null;
+    }
+    public boolean atacar(Unidades atacante, int x, int y){
+        Unidades atacado = partida.tablero[x][y];
+        double factorAleatorio = Math.random() * 2;
+        double danoInfligido = Math.abs(factorAleatorio*atacante.getAtaque() - atacado.getDefensa());
+        atacado.subirHP(-danoInfligido);
+        if(atacado.isUnidadMuerta()){
+            CheckBox opcionAtacado = buscarOpcionEn(new int[]{x, y});
+            GridPane.setConstraints(opcionAtacado, 3, tamannoTablero);
+            partida.listaTodasLasUnidades.delete(atacado);
+            partida.tablero[x][y] = null;
+        }
+        return true;
+    }
+    public void onValidarAtaqueClick(ActionEvent actionEvent){
+        String coordX = textFieldCoordX.getText().trim();
+        String coordY = textFieldCoordY.getText().trim();
+        try{
+            int x = Integer.parseInt(coordX);
+            int y = Integer.parseInt(coordY);
+            int[] casillaAtacado = new int[]{x, y};
+            ListaBasica<int[]> listaCasillas = getCasillasEnRg(diccionarioBotones.get(unidadSeleccionada)[0], diccionarioBotones.get(unidadSeleccionada)[1], u.getRango_ataque());
+            ListaBasica<int[]> listaCasillasBuenas = getListaCasillasEnRgBueno(listaCasillas);
+            int longitudLista = listaCasillasBuenas.getNumElementos();
+            for(int i = 0; i < longitudLista; i++){
+                if(Arrays.equals(casillaAtacado, listaCasillasBuenas.get(i))){
+                    if(partida.tablero[casillaAtacado[0]][casillaAtacado[1]] != null && partida.tablero[casillaAtacado[0]][casillaAtacado[1]].isDeCiencias() != jugadorEsDeCiencias){
+                        atacar(partida.tablero[casillaAtacado[0]][casillaAtacado[1]], casillaAtacado[0], casillaAtacado[1]);
+                    }
+                }
+            }
+            rollback();
+            turno++;
+            labelTurno.setText(Integer.toString(turno));
+        }catch(NumberFormatException e){
+            VBox pantalla = new VBox();
+            Label label = new Label("Introduce un número");
+            pantalla.getChildren().add(label);
+            Stage stage = new Stage();
+            Scene scene = new Scene(pantalla, 200, 100);
+            stage.setTitle("Error");
+            stage.setScene(scene);
+            stage.show();
+        }
     }
 
 
