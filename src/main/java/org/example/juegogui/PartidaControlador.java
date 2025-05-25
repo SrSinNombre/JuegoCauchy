@@ -690,4 +690,18 @@ public class PartidaControlador {
             System.out.println("Error al cargar la pantalla principal");
         }
     }
+    protected void onBotonComoJugarClick(ActionEvent actionEvent) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("/org/example/juegogui/funcionamiento-juego.fxml"));
+            Scene scene = new Scene(fxmlLoader.load(), 640, 480);
+            Stage stage = new Stage();
+            stage.setTitle("comojugar");
+            stage.setScene(scene);
+            stage.show();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("Error al cargar la pantalla principal");
+        }
+    }
 }

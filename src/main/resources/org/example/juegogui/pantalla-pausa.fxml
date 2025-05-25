@@ -18,7 +18,7 @@
             <Insets top="30.0" />
          </VBox.margin>
       </Button>
-      <Button layoutX="191.0" layoutY="168.0" mnemonicParsing="false" prefHeight="47.0" prefWidth="239.0" text="Cargar">
+      <Button layoutX="191.0" layoutY="168.0" mnemonicParsing="false" onAction="#onBotonComoJugarClick" prefHeight="47.0" prefWidth="239.0" text="cómo jugar">
          <VBox.margin>
             <Insets top="30.0" />
          </VBox.margin>
