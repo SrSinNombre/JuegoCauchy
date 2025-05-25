@@ -39,6 +39,7 @@ public class PartidaControlador {
     private Label seleccionaTamanno;
     protected int tamannoTablero;
     protected int tamannoCasilla;
+    private static final Logger log = LogManager.getLogger(Partida.class);
 
     private final Label labelTurno = new Label();
     Label labelUnidad = new Label();
@@ -81,7 +82,7 @@ public class PartidaControlador {
         }
         catch (IOException e) {
             e.printStackTrace();
-            System.out.println("Error al cargar la pantalla principal");
+            log.info("Error al cargar la pantalla principal");
         }
     }
     @FXML
@@ -96,7 +97,7 @@ public class PartidaControlador {
         }
         catch (IOException e) {
             e.printStackTrace();
-            System.out.println("Error al cargar la pantalla principal");
+            log.info("Error al cargar la pantalla principal");
         }
     }
 
@@ -113,7 +114,7 @@ public class PartidaControlador {
         }
         catch (IOException e) {
             e.printStackTrace();
-            System.out.println("Error al cargar la pantalla principal");
+            log.info("Error al cargar la pantalla principal");
         }
     }
     @FXML
@@ -129,7 +130,7 @@ public class PartidaControlador {
         }
         catch (IOException e) {
             e.printStackTrace();
-            System.out.println("Error al cargar la pantalla principal");
+            log.info("Error al cargar la pantalla principal");
         }
     }
     @FXML
@@ -144,7 +145,7 @@ public class PartidaControlador {
         }
         catch (IOException e) {
             e.printStackTrace();
-            System.out.println("Error al cargar la pantalla principal");
+            log.info("Error al cargar la pantalla principal");
         }
     }
 
@@ -166,7 +167,7 @@ public class PartidaControlador {
         }
         catch (IOException e) {
             e.printStackTrace();
-            System.out.println("Error al cargar la pantalla principal");
+            log.info("Error al cargar la pantalla principal");
         }
     }
 
@@ -183,7 +184,7 @@ public class PartidaControlador {
         }
         catch (IOException e) {
             e.printStackTrace();
-            System.out.println("Error al cargar la pantalla principal");
+            log.info("Error al cargar la pantalla principal");
         }
     }
     public void onOpcion8x8Click(){
@@ -212,7 +213,7 @@ public class PartidaControlador {
             checkBox.setOnAction(this::onUnidadClick);
 
             diccionarioBotones.agregar(checkBox, new int[]{x, y});
-            System.out.println("Unidad agregada");
+            log.info("Unidad agregada");
 
 
             int[] casilla = new int[]{x, y};
@@ -240,13 +241,23 @@ public class PartidaControlador {
             colocarUnidad(gridPane, c2, tamannoTablero-1, tamannoTablero-1);
             colocarUnidad(gridPane, l1, 0, 0);
             colocarUnidad(gridPane, l2, tamannoTablero-1, 0);
+            log.info("El " + c1 + "se ha colocado en " + "0" + "x" + tamannoTablero-1");
+                    log.info("El " + c2 + "se ha colocado en " + tamannoTablero-1 + "x" + tamannoTablero-1");
+                            log.info("El " + l1 + "se ha colocado en " + "0" + "x" + "0");
+                                    log.info("El " + l2 + "se ha colocado en " + tamannoTablero-1 + "x" + "0" ");
         }else if(partida.turno == 1){
             colocarUnidad(gridPane, l1, 0, tamannoTablero-1);
             colocarUnidad(gridPane, l2, tamannoTablero-1, tamannoTablero-1);
             colocarUnidad(gridPane, c1, 0, 0);
             colocarUnidad(gridPane, c2, tamannoTablero-1, 0);
+            log.info("El " + l1 + "se ha colocado en " + "0" + "x" + tamannoTablero-1");
+                    log.info("El " + l2 + "se ha colocado en " + tamannoTablero-1 + "x" + tamannoTablero-1");
+                                    log.info("El " + c1 + "se ha colocado en " + "0" + "x" + "0");
+                                            log.info("El " + c2 + "se ha colocado en " + tamannoTablero-1 + "x" + "0" ");
         }
         turno = partida.turno;
+        log.info("La partida ha comenzado");
+        log.info("El tablero es de" + tamannoTablero + "x" + tamannoTablero);
     }
 
     public void onEmpezarPartidaCienciasClick(ActionEvent actionEvent){
@@ -720,7 +731,7 @@ public class PartidaControlador {
             return false;
         }
     }
-    public boolean moverUnidad(CheckBox opcionUnidad, int x, int y){//este es el método bueno, el otro se quita
+    public boolean moverUnidad(CheckBox opcionUnidad, int x, int y, int turno){//este es el método bueno, el otro se quita
         if(!sePuedeMoverA(opcionUnidad, x, y)) return false;
         int[] uPosInicial = diccionarioBotones.get(opcionUnidad);
         GridPane.setConstraints(opcionUnidad, x, y);
@@ -728,6 +739,7 @@ public class PartidaControlador {
         diccionarioBotones.delete(opcionUnidad);
         diccionarioBotones.agregar(opcionUnidad, new int[]{x, y});
         return true;
+        log.info("El" + opcionUnidad + "se ha movido a la casilla " + x + "x" + y + "en el turno" + turno);
 
     }
     public void onValidarMovimientoClick(ActionEvent actionEvent){
@@ -760,7 +772,7 @@ public class PartidaControlador {
                     }
                     catch (IOException e) {
                         e.printStackTrace();
-                        System.err.println("Error al cargar la pantalla principal");
+                        log.info("Error al cargar la pantalla principal");
                     }//abrir nueva ventana con el endscreen de cuando gana el jugador
                 }else if(ganadorIA()){
                     try {
@@ -773,7 +785,7 @@ public class PartidaControlador {
                     }
                     catch (IOException e) {
                         e.printStackTrace();
-                        System.err.println("Error al cargar la pantalla principal");
+                        log.info("Error al cargar la pantalla principal");
                     }//abrir nueva ventana con el endscreen de cuando gana la IA
 
                 }else{
@@ -831,12 +843,19 @@ public class PartidaControlador {
         double factorAleatorio = Math.random() * 2;
         double danoInfligido = Math.abs(factorAleatorio*atacante.getAtaque() - atacado.getDefensa());
         atacado.subirHP(-danoInfligido);
+        log.info("El " + atacante + "ha atacado al " + atacado);
         if(atacado.isUnidadMuerta()){
             CheckBox opcionAtacado = buscarOpcionEn(new int[]{x, y});
             GridPane.setConstraints(opcionAtacado, 3, tamannoTablero);
             partida.listaTodasLasUnidades.delete(atacado);
             partida.tablero[x][y] = null;
+            log.info("El " + atacado + "ha muerto")
         }
+        else{
+            log.info("El " + atacado + "tiene" + atacado.getHP() + "de HP")
+        }
+
+
     }
     public void onValidarAtaqueClick(ActionEvent actionEvent){
         String coordX = textFieldCoordX.getText().trim();
@@ -911,6 +930,10 @@ public class PartidaControlador {
             if(partida.tablero[casilla[0]][casilla[1]] != null && partida.tablero[casilla[0]][casilla[1]].isDeCiencias() != jugadorEsDeCiencias) return false;
         }
         return true;
+        if (ganadorJugador() == true){
+            log.info("Ha ganado el jugador");
+        }
+
     }
     public boolean ganadorIA(){
         int[] casillaCabeza = diccionarioBotones.getCabeza().getValor();
@@ -922,6 +945,9 @@ public class PartidaControlador {
             if(partida.tablero[casilla[0]][casilla[1]] != null && partida.tablero[casilla[0]][casilla[1]].isDeCiencias() == jugadorEsDeCiencias) return false;
         }
         return true;
+        if (ganadorIA() == true){
+            log.info("Ha ganado la IA");
+        }
     }
     //GENERAR UNIDAD RANDOM CADA 10 TURNOS
     public void generarUnidadRandom(){
@@ -945,6 +971,8 @@ public class PartidaControlador {
             randX2 = Math.round((float) Math.random()*(tamannoTablero-1));
             randY2 = Math.round((float) Math.random()*(tamannoTablero-1));
         }
+        log.info("Se ha generado un " + u1 + "en " + randX1 + "x" + randY1);
+        log.info("Se ha generado un " + u2 + "en " + randX2 + "x" + randY2);
 
     }
     public boolean isTableroLleno(){
