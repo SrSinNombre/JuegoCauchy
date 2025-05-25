@@ -572,9 +572,32 @@ public class PartidaControlador {
             }else {
                 moverUnidad(unidadSeleccionada, x, y);
                 colocarUnidad(partida.gridPane, u, x, y);
-                if(ganadorJugador()){ //abrir nueva ventana con el endscreen de cuando gana el jugador
-
-                }else if(ganadorIA()){ //abrir nueva ventana con el endscreen de cuando gana la IA
+                if(ganadorJugador()){
+                    try {
+                        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("/org/example/juegogui/ganador-jugador.fxml"));
+                        Scene scene = new Scene(fxmlLoader.load(), 640, 480);
+                        Stage stage = new Stage();
+                        stage.setTitle("comojugar");
+                        stage.setScene(scene);
+                        stage.show();
+                    }
+                    catch (IOException e) {
+                        e.printStackTrace();
+                        System.err.println("Error al cargar la pantalla principal");
+                    }//abrir nueva ventana con el endscreen de cuando gana el jugador
+                }else if(ganadorIA()){
+                    try {
+                        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("/org/example/juegogui/ganador-ia.fxml"));
+                        Scene scene = new Scene(fxmlLoader.load(), 640, 480);
+                        Stage stage = new Stage();
+                        stage.setTitle("comojugar");
+                        stage.setScene(scene);
+                        stage.show();
+                    }
+                    catch (IOException e) {
+                        e.printStackTrace();
+                        System.err.println("Error al cargar la pantalla principal");
+                    }//abrir nueva ventana con el endscreen de cuando gana la IA
 
                 }else{
                     rollback();
@@ -655,10 +678,30 @@ public class PartidaControlador {
                     }
                 }
             }
-            if(ganadorJugador()){ //abrir nueva ventana con el endscreen de cuando gana el jugador
-                System.out.println("ganador jugador");
-            }else if(ganadorIA()){ //abrir nueva ventana con el endscreen de cuando gana la IA
-                System.out.println("ganador ia");
+            if(ganadorJugador()){
+                try {
+                    FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("/org/example/juegogui/ganador-jugador.fxml"));
+                    Scene scene = new Scene(fxmlLoader.load(), 640, 480);
+                    Stage stage = new Stage();
+                    stage.setTitle("comojugar");
+                    stage.setScene(scene);
+                    stage.show();
+                }
+                catch (IOException e) {
+                    e.printStackTrace();
+                    System.err.println("Error al cargar la pantalla principal");//abrir nueva ventana con el endscreen de cuando gana el jugador
+            }else if(ganadorIA()){
+                    try {
+                        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("/org/example/juegogui/ganador-ia.fxml"));
+                        Scene scene = new Scene(fxmlLoader.load(), 640, 480);
+                        Stage stage = new Stage();
+                        stage.setTitle("comojugar");
+                        stage.setScene(scene);
+                        stage.show();
+                    }
+                    catch (IOException e) {
+                        e.printStackTrace();
+                        System.err.println("Error al cargar la pantalla principal");//abrir nueva ventana con el endscreen de cuando gana la IA
             }else{
                 rollback();
                 turno++;

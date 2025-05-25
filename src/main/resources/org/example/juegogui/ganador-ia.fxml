@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.juegogui.GanadorIa">
+   <children>
+      <Label layoutX="198.0" layoutY="106.0" text="HAS PERDIDO ESCORIA, ERES ADRI VERDAD ? " textFill="#1c10e3" />
+      <Button layoutX="109.0" layoutY="200.0" mnemonicParsing="false" onAction="#onNuevaPartidaClick" text="nueva partida" />
+      <Button layoutX="258.0" layoutY="200.0" mnemonicParsing="false" text="mostrar logs" />
+      <Button layoutX="422.0" layoutY="200.0" mnemonicParsing="false" onAction="#onSiClick" text="salir del juego" />
+   </children>
+</AnchorPane>

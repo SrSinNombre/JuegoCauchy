@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.juegogui.GanadorJugador">
+   <children>
+      <Button layoutX="97.0" layoutY="227.0" mnemonicParsing="false" onAction="#onNuevaPartidaClick" text="nueva partida" />
+      <Button layoutX="259.0" layoutY="227.0" mnemonicParsing="false" text="mostrar logs" />
+      <Button layoutX="411.0" layoutY="227.0" mnemonicParsing="false" onAction="#onSiClick" text="salir del juego" />
+      <Label layoutX="179.0" layoutY="97.0" text="ENHORABUENA PRINCESA, HAS GANADO" textFill="#74cd4e" />
+   </children>
+</AnchorPane>
