@@ -12,8 +12,8 @@
             <Font name="System Bold" size="55.0" />
          </font>
       </Label>
-      <Button mnemonicParsing="false" prefHeight="47.0" prefWidth="239.0" text="Reanudar" />
-      <Button layoutX="191.0" layoutY="91.0" mnemonicParsing="false" prefHeight="47.0" prefWidth="239.0" text="Guardar">
+      <Button mnemonicParsing="false" onAction="#onBotonReanudarClick" prefHeight="47.0" prefWidth="239.0" text="Reanudar" />
+      <Button layoutX="191.0" layoutY="91.0" mnemonicParsing="false" onAction="#onBotonGuardarClick" prefHeight="47.0" prefWidth="239.0" text="Guardar">
          <VBox.margin>
             <Insets top="30.0" />
          </VBox.margin>
@@ -23,7 +23,7 @@
             <Insets top="30.0" />
          </VBox.margin>
       </Button>
-      <Button layoutX="191.0" layoutY="245.0" mnemonicParsing="false" prefHeight="47.0" prefWidth="201.0" text="Salir">
+      <Button layoutX="191.0" layoutY="245.0" mnemonicParsing="false" onAction="#onBotonSalirMenuPausaClick" prefHeight="47.0" prefWidth="201.0" text="Salir">
          <VBox.margin>
             <Insets top="40.0" />
          </VBox.margin>

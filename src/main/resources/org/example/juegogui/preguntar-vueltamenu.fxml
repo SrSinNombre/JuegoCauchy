@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox alignment="CENTER" fillWidth="false" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.juegogui.PartidaControlador">
+    <children>
+        <Label alignment="CENTER" contentDisplay="TOP" prefHeight="64.0" prefWidth="477.0" text="¿Estás seguro que quieres salir?" textAlignment="CENTER" textFill="#ec0000">
+            <font>
+                <Font name="Impact" size="33.0" />
+            </font>
+        </Label>
+      <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="18.0" prefWidth="423.0" text="Todo progreso no guardado se perderá">
+         <font>
+            <Font size="15.0" />
+         </font></Label>
+        <Button fx:id="siVolver" alignment="CENTER" cancelButton="true" mnemonicParsing="false" onAction="#onSiVolverClick" prefHeight="64.0" prefWidth="64.0" text="Sí" textAlignment="CENTER" textFill="RED" translateX="-100.0" translateY="103.0">
+            <font>
+                <Font name="SansSerif Regular" size="24.0" />
+            </font>
+            <VBox.margin>
+                <Insets top="40.0" />
+            </VBox.margin>
+        </Button>
+        <Button fx:id="noVolver" alignment="CENTER" defaultButton="true" layoutX="235.0" layoutY="227.0" mnemonicParsing="false" onAction="#onNoVolverClick" prefHeight="64.0" prefWidth="64.0" text="No" textAlignment="CENTER" textFill="RED" translateX="100.0">
+            <font>
+                <Font name="SansSerif Regular" size="24.0" />
+            </font>
+            <VBox.margin>
+                <Insets top="40.0" />
+            </VBox.margin>
+        </Button>
+    </children>
+</VBox>

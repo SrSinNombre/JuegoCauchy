@@ -36,9 +36,12 @@ public class Partida {
         this.tableroAncho = tableroAncho;
         this.tableroAlto = tableroAlto;
 
-        if(jugadorEsDeCiencias) turno = 0;
-        else turno = 1;
-
+        if(jugadorEsDeCiencias) {
+            turno = 0;
+        }
+        else {
+            turno = 1;
+        }
         tablero = new Unidades[tableroAncho][tableroAlto];
         //tamaños del tablero: 8x8, 10x10, 15x15
     }

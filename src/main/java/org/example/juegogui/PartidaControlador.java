@@ -30,6 +30,8 @@ import java.util.Arrays;
 
 import org.apache.logging.log4j.*;
 
+import javax.swing.*;
+
 public class PartidaControlador {
     @FXML
     private CheckBox opcion8x8, opcion10x10, opcion15x15;
@@ -416,13 +418,188 @@ public class PartidaControlador {
         marco.getChildren().add(tablero);
         marco.getChildren().add(botonPausa);
         marco.getChildren().addAll(textFieldCoordX, textFieldCoordY, validarMovimiento);
-        Scene scene = new Scene(marco);
-        Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-        stage.setTitle("CONQUISTA");
-        stage.setScene(scene);
-        stage.show();
+        Scene scene1 = new Scene(marco);
+        Stage stage1 = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+        stage1.setTitle("CONQUISTA");
+        stage1.setScene(scene1);
+        stage1.show();
     }//esto mismo que he hecho si el usuario elige ciencias hay que hacerlo si el usuario elige letras, que lo haga otro
 
+    public void onEmpezarPartidaLetrasClick(ActionEvent actionEvent){
+        if(opcion8x8.isSelected()) {
+            tamannoTablero = 8;
+            tamannoCasilla = 75;
+        }
+        if(opcion10x10.isSelected()) {
+            tamannoTablero = 10;
+            tamannoCasilla = 60;
+        }
+        if(opcion15x15.isSelected()) {
+            tamannoTablero = 15;
+            tamannoCasilla = 40;
+        }
+        if(tamannoTablero == 0) {
+            seleccionaTamanno.setTextFill(Paint.valueOf("000000"));
+            return;
+        }
+
+        AnchorPane marco = new AnchorPane();
+        marco.setPrefSize(1350, 768);
+
+        Partida partida = new Partida(tamannoTablero, tamannoTablero, false);
+        tablero = partida.gridPane;
+        for(int i = 0; i < tamannoTablero; i++){
+            for(int j = 0; j < tamannoTablero; j++){
+                int suma = i+j;
+                Image image;
+                if(suma % 2 == 0) image = new Image("file:src/main/java/Sprites/blt.png");
+                else image = new Image("file:src/main/java/Sprites/wht.png");
+                ImageView imageView = new ImageView(image);
+                imageView.setFitWidth(tamannoCasilla);
+                imageView.setFitHeight(tamannoCasilla);
+                tablero.add(imageView, j, i);
+            }
+        }
+        ImageView cementerio = new ImageView(new Image("file:src/main/java/Sprites/gvy.png"));
+        cementerio.setFitWidth(tamannoCasilla);
+        cementerio.setFitHeight(tamannoCasilla);
+        tablero.add(cementerio, 3, tamannoTablero);
+
+        iniciarPartida(tablero, false);
+        tablero.setGridLinesVisible(true);
+        tablero.setLayoutX(650);
+        tablero.setLayoutY(84);
+
+        //boton pausa
+        botonPausa = new Button("| |");
+        botonPausa.setPrefSize(69, 69);
+        botonPausa.setLayoutX(10);
+        botonPausa.setLayoutY(10);
+        botonPausa.setFont(new Font("System Bold", 30));
+        botonPausa.setOnAction(this::onBotonPausaClick);
+
+        // VBox (Panel lateral izquierdo)
+        VBox panelLateral = new VBox();
+        panelLateral.setLayoutX(50);
+        panelLateral.setLayoutY(90);
+        panelLateral.setPrefSize(470, 600);
+        panelLateral.setAlignment(Pos.TOP_CENTER);
+        panelLateral.setSpacing(10);
+
+        // HBox: Turno
+        HBox hboxTurno = new HBox();
+        hboxTurno.setPrefSize(470, 64);
+        Label labelTurnoTexto = new Label("Turno número: ");
+        labelTurnoTexto.setFont(new Font(35));
+        labelTurnoTexto.setPrefSize(308, 55);
+        labelTurno.setFont(new Font(35));
+        labelTurno.setPrefSize(164, 55);
+        labelTurno.setText(Integer.toString(turno));
+        hboxTurno.getChildren().addAll(labelTurnoTexto, labelTurno);
+        //tengo que bindear labelturno con partida.turno
+
+        // HBox: Unidad seleccionada
+        HBox hboxUnidad = new HBox();
+        hboxUnidad.setPrefSize(470, 60);
+        Label labelUnidadTexto = new Label("Unidad seleccionada:");
+        labelUnidadTexto.setFont(new Font(30));
+        labelUnidadTexto.setPrefSize(308, 55);
+        labelUnidad.setFont(new Font(30));
+        labelUnidad.setPrefSize(164, 55);
+        hboxUnidad.getChildren().addAll(labelUnidadTexto, labelUnidad);
+        //tengo que bindear labelUnidad con u.getNombre()
+
+        // Estadísticas
+        Label labelStats = new Label("ESTADÍSTICAS:");
+        labelStats.setFont(Font.font("System Bold", 49));
+        labelStats.setTextFill(javafx.scene.paint.Color.web("#c4e505"));
+        labelStats.setPrefSize(364, 75);
+
+        // VIDA
+        Label labelVida = new Label("VIDA");
+        labelVida.setFont(Font.font("System Bold Italic", 23));
+        labelVida.setTextFill(javafx.scene.paint.Color.RED);
+        labelVida.setPrefSize(256, 54);
+        barraVida.setPrefWidth(200);
+        HBox hboxVida = new HBox(new AnchorPane(new ImageView(new Image("file:src/main/java/Sprites/hpt.png"))), barraVida, labelHP);
+        hboxVida.setAlignment(Pos.CENTER);
+        hboxVida.setPrefSize(470, 50);
+        //bindear labelHP cpn u.getHP()
+
+        // ATAQUE
+        Label labelAtaque = new Label("ATAQUE");
+        labelAtaque.setFont(Font.font("System Bold Italic", 23));
+        labelAtaque.setTextFill(javafx.scene.paint.Color.LIME);
+        labelAtaque.setPrefSize(256, 54);;
+        HBox hboxAtaque = new HBox(new AnchorPane(new ImageView(new Image("file:src/main/java/Sprites/atq.png"))), labelAT);
+        hboxAtaque.setAlignment(Pos.CENTER);
+        hboxAtaque.setPrefSize(470, 50);
+        //bindear labelAT con u.getAtaque()
+
+        // DEFENSA
+        Label labelDefensa = new Label("DEFENSA");
+        labelDefensa.setFont(Font.font("System Bold Italic", 23));
+        labelDefensa.setTextFill(javafx.scene.paint.Color.BLUE);
+        labelDefensa.setPrefSize(256, 54);
+        HBox hboxDefensa = new HBox(new AnchorPane(new ImageView(new Image("file:src/main/java/Sprites/def.png"))), labelDF);
+        hboxDefensa.setAlignment(Pos.CENTER);
+        hboxDefensa.setPrefSize(470, 50);
+        //bindear labelDF con u.getDefensa()
+
+        // Rango de ataque y movimiento + botones
+        VBox vboxAtaque = new VBox(new Label("Rango de ataque:"), labelRangoAtaque);
+        vboxAtaque.setPrefSize(109, 87);
+        VBox vboxMovimiento = new VBox(new Label("Rango de movimiento:"), labelRangoMovimiento);//bindear labelRangos con u.getRango...
+        vboxMovimiento.setPrefSize(129, 87);
+
+        btnMover.setPrefSize(76, 26);
+        HBox.setMargin(btnMover, new Insets(0, 20, 0, 20));
+
+        btnAtacar.setPrefSize(76, 26);
+        HBox hboxAcciones = new HBox(vboxAtaque, vboxMovimiento, btnMover, btnAtacar);
+        hboxAcciones.setPrefSize(470, 87);
+        hboxAcciones.setAlignment(Pos.CENTER_LEFT);
+
+        // Agregar todo al VBox principal
+        panelLateral.getChildren().addAll(
+                hboxTurno, hboxUnidad,
+                labelStats,
+                labelVida, hboxVida,
+                labelAtaque, hboxAtaque,
+                labelDefensa, hboxDefensa,
+                hboxAcciones
+        );
+
+        //campos de texto + boton validarMovimiento
+        textFieldCoordX.setPromptText("Introduce coordenada X...");
+        textFieldCoordX.setOpacity(0);
+        textFieldCoordX.setLayoutX(650);
+        textFieldCoordX.setLayoutY(6);
+        textFieldCoordX.setDisable(true);
+
+        textFieldCoordY.setPromptText("Introduce coordenada Y...");
+        textFieldCoordY.setOpacity(0);
+        textFieldCoordY.setLayoutX(834);
+        textFieldCoordY.setLayoutY(6);
+        textFieldCoordY.setDisable(true);
+
+        validarMovimiento.setText("Validar movimiento");
+        validarMovimiento.setOpacity(0);
+        validarMovimiento.setDisable(true);
+        validarMovimiento.setLayoutX(1033);
+        validarMovimiento.setLayoutY(6);
+
+        // Añadir todos los elementos al AnchorPane raíz
+        marco.getChildren().addAll(panelLateral);
+        marco.getChildren().add(tablero);
+        marco.getChildren().add(botonPausa);
+        marco.getChildren().addAll(textFieldCoordX, textFieldCoordY, validarMovimiento);
+        Scene scene1 = new Scene(marco);
+        Stage stage1 = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+        stage1.setTitle("CONQUISTA");
+        stage1.setScene(scene1);
+        stage1.show();
+    }
 
     //metodo auxiliar
     public void soloSeleccionarUnaUnidad(DiccionarioBasico<CheckBox, int[]> diccionario, CheckBox opcionSeleccionada){
@@ -690,7 +867,8 @@ public class PartidaControlador {
                 catch (IOException e) {
                     e.printStackTrace();
                     System.err.println("Error al cargar la pantalla principal");//abrir nueva ventana con el endscreen de cuando gana el jugador
-            }else if(ganadorIA()){
+                }
+            } else if(ganadorIA()) {
                     try {
                         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("/org/example/juegogui/ganador-ia.fxml"));
                         Scene scene = new Scene(fxmlLoader.load(), 640, 480);
@@ -702,6 +880,7 @@ public class PartidaControlador {
                     catch (IOException e) {
                         e.printStackTrace();
                         System.err.println("Error al cargar la pantalla principal");//abrir nueva ventana con el endscreen de cuando gana la IA
+                    }
             }else{
                 rollback();
                 turno++;
@@ -869,6 +1048,74 @@ public class PartidaControlador {
         catch (IOException e) {
             e.printStackTrace();
             System.err.println("Error al cargar la pantalla principal");
+        }
+    }
+    public void onBotonReanudarClick(ActionEvent actionEvent){
+        Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+        stage.close();
+    }
+    public void onBotonGuardarClick(ActionEvent actionEvent){
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("/org/example/juegogui/pantalla-guardado.fxml"));
+            Scene scene = new Scene(fxmlLoader.load(), 640, 480);
+            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+            stage.setTitle("CONQUISTA");
+            stage.setScene(scene);
+            stage.show();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error al cargar la pantalla principal");
+        }
+
+    }
+    public void onBotonSalirMenuPausaClick(ActionEvent actionEvent) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("/org/example/juegogui/preguntar-vueltamenu.fxml"));
+            Scene scene = new Scene(fxmlLoader.load(), 640, 480);
+            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+            stage.close();
+            stage.setTitle("CONQUISTA");
+            stage.setScene(scene);
+            stage.show();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error al cargar la pantalla principal");
+        }
+    }
+
+    public void onSiVolverClick(ActionEvent actionEvent){
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("/org/example/juegogui/pantalla-principal.fxml"));
+            Scene scene = new Scene(fxmlLoader.load(), 640, 480);
+            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+            Stage stage1 = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+            stage.close();
+            stage1.close();
+            stage.setTitle("CONQUISTA");
+            stage.setScene(scene);
+            stage.show();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error al cargar la pantalla principal");
+        }
+    }
+
+    public void onNoVolverClick(ActionEvent actionEvent) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("/org/example/juegogui/pantalla-pausa.fxml"));
+            Scene scene = new Scene(fxmlLoader.load(), 640, 480);
+            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+            stage.close();
+            stage.setTitle("CONQUISTA");
+            stage.setScene(scene);
+            stage.show();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error al cargar la pantalla principal");
         }
     }
 }
