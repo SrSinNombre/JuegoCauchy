@@ -3,18 +3,18 @@ package EstructurasDeDatos.grafos;
 public class Arista<T> {
     protected Vertice<T> origen;
     protected Vertice<T> destino;
-    protected double peso;
+    protected int peso;
 
-    public Arista(Vertice<T> origen, Vertice<T> destino, double peso){
+    public Arista(Vertice<T> origen, Vertice<T> destino, int peso){
         this.origen = origen;
         this.destino = destino;
         this.peso = peso;
     }
 
-    public double getPeso() {
+    public int getPeso() {
         return peso;
     }
-    public void setPeso(double peso) {
+    public void setPeso(int peso) {
         this.peso = peso;
     }
     public Vertice<T> getDestino() {

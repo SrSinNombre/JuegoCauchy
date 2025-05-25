@@ -128,5 +128,8 @@
             <Font name="System Bold" size="30.0" />
          </font>
       </Button>
+      <TextField layoutX="650.0" layoutY="706.0" promptText="Introduce coordenada X..." />
+      <TextField layoutX="834.0" layoutY="706.0" promptText="Introduce coordenada Y..." />
+      <Button layoutX="1033.0" layoutY="706.0" mnemonicParsing="false" text="Button" />
    </children>
 </AnchorPane>

@@ -1,8 +1,12 @@
 package org.example.juegogui;
 
 import EstructurasDeDatos.Iterador;
+import EstructurasDeDatos.Lista;
 import EstructurasDeDatos.diccionario.Diccionario;
 import EstructurasDeDatos.diccionario.DiccionarioBasico;
+import EstructurasDeDatos.grafos.Arista;
+import EstructurasDeDatos.grafos.GrafoPonderado;
+import EstructurasDeDatos.grafos.Vertice;
 import EstructurasDeDatos.lista.ListaBasica;
 import EstructurasDeDatos.listaDoblementeEnlazada.IteradorListaDE;
 import Unidades.Unidades;
@@ -70,6 +74,7 @@ public class PartidaControlador {
     boolean jugadorEsDeCiencias;
     private Unidades u;
     private CheckBox unidadSeleccionada;
+    private GridPane tablero;
 
     ObjectProperty<Unidades> unidad = new SimpleObjectProperty<>();
 
@@ -210,7 +215,6 @@ public class PartidaControlador {
     public boolean colocarUnidad(GridPane gridPane, Unidades u, int x, int y){ //este es el método bueno, el otro se quita
         if(partida.tablero[x][y] == null){
             partida.tablero[x][y] = u;
-            partida.listaTodasLasUnidades.agregar(u, new int[]{x, y});
             ImageView spriteUnidad = partida.getDiccionarioUnidadesImagen().get(u.getNombre());
             AnchorPane anchorPane = new AnchorPane();
             anchorPane.setStyle("-fx-background-color: white");
@@ -221,6 +225,7 @@ public class PartidaControlador {
             checkBox.setOnAction(this::onUnidadClick);
 
             diccionarioBotones.agregar(checkBox, new int[]{x, y});
+            System.out.println("Unidad agregada");
 
 
             int[] casilla = new int[]{x, y};
@@ -279,7 +284,7 @@ public class PartidaControlador {
         marco.setPrefSize(1350, 768);
 
         Partida partida = new Partida(tamannoTablero, tamannoTablero, true);
-        GridPane tablero = partida.gridPane;
+        tablero = partida.gridPane;
         for(int i = 0; i < tamannoTablero; i++){
             for(int j = 0; j < tamannoTablero; j++){
                 int suma = i+j;
@@ -292,8 +297,9 @@ public class PartidaControlador {
                 tablero.add(imageView, j, i);
             }
         }
-        AnchorPane cementerio = new AnchorPane(new Label("CEMEN-\nTERIO"));
-        cementerio.setPrefSize(tamannoCasilla, tamannoCasilla);
+        ImageView cementerio = new ImageView(new Image("file:src/main/java/Sprites/gvy.png"));
+        cementerio.setFitWidth(tamannoCasilla);
+        cementerio.setFitHeight(tamannoCasilla);
         tablero.add(cementerio, 3, tamannoTablero);
 
         iniciarPartida(tablero, true);
@@ -333,9 +339,9 @@ public class PartidaControlador {
         HBox hboxUnidad = new HBox();
         hboxUnidad.setPrefSize(470, 60);
         Label labelUnidadTexto = new Label("Unidad seleccionada:");
-        labelUnidadTexto.setFont(new Font(31));
+        labelUnidadTexto.setFont(new Font(30));
         labelUnidadTexto.setPrefSize(308, 55);
-        labelUnidad.setFont(new Font(35));
+        labelUnidad.setFont(new Font(30));
         labelUnidad.setPrefSize(164, 55);
         hboxUnidad.getChildren().addAll(labelUnidadTexto, labelUnidad);
         //tengo que bindear labelUnidad con u.getNombre()
@@ -533,6 +539,7 @@ public class PartidaControlador {
         validarMovimiento.setDisable(false);
         validarMovimiento.setOpacity(1);
         validarMovimiento.setOnAction(this::onValidarMovimientoClick);
+        validarMovimiento.setText("Validar movimiento");
 
     }
     public boolean sePuedeMoverA(CheckBox opcionUnidad, int x, int y){//este es el método bueno, el otro se quita
@@ -573,17 +580,24 @@ public class PartidaControlador {
                 Label label = new Label("No se puede mover la unidad a esa casilla, está fuera de rango");
                 pantalla.getChildren().add(label);
                 Stage stage = new Stage();
-                Scene scene = new Scene(pantalla, 200, 100);
+                Scene scene = new Scene(pantalla, 350, 100);
                 stage.setTitle("Error");
                 stage.setScene(scene);
                 stage.show();
             }else {
                 moverUnidad(unidadSeleccionada, x, y);
-                diccionarioBotones.agregar(unidadSeleccionada, new int[]{x, y});
                 colocarUnidad(partida.gridPane, u, x, y);
-                rollback();
-                turno++;
-                labelTurno.setText(Integer.toString(turno));
+                if(ganadorJugador()){ //abrir nueva ventana con el endscreen de cuando gana el jugador
+
+                }else if(ganadorIA()){ //abrir nueva ventana con el endscreen de cuando gana la IA
+
+                }else{
+                    rollback();
+                    turno++;
+                    labelTurno.setText(Integer.toString(turno));
+                    IA();
+                    if(turno % 10 == 0) generarUnidadRandom();
+                }
             }
         }catch(NumberFormatException e){
             VBox pantalla = new VBox();
@@ -627,7 +641,7 @@ public class PartidaControlador {
         }
         return null;
     }
-    public boolean atacar(Unidades atacante, int x, int y){
+    public void atacar(Unidades atacante, int x, int y){
         Unidades atacado = partida.tablero[x][y];
         double factorAleatorio = Math.random() * 2;
         double danoInfligido = Math.abs(factorAleatorio*atacante.getAtaque() - atacado.getDefensa());
@@ -638,7 +652,6 @@ public class PartidaControlador {
             partida.listaTodasLasUnidades.delete(atacado);
             partida.tablero[x][y] = null;
         }
-        return true;
     }
     public void onValidarAtaqueClick(ActionEvent actionEvent){
         String coordX = textFieldCoordX.getText().trim();
@@ -657,9 +670,17 @@ public class PartidaControlador {
                     }
                 }
             }
-            rollback();
-            turno++;
-            labelTurno.setText(Integer.toString(turno));
+            if(ganadorJugador()){ //abrir nueva ventana con el endscreen de cuando gana el jugador
+                System.out.println("ganador jugador");
+            }else if(ganadorIA()){ //abrir nueva ventana con el endscreen de cuando gana la IA
+                System.out.println("ganador ia");
+            }else{
+                rollback();
+                turno++;
+                labelTurno.setText(Integer.toString(turno));
+                IA();
+                if(turno % 10 == 0) generarUnidadRandom();
+            }
         }catch(NumberFormatException e){
             VBox pantalla = new VBox();
             Label label = new Label("Introduce un número");
@@ -670,6 +691,127 @@ public class PartidaControlador {
             stage.setScene(scene);
             stage.show();
         }
+    }
+
+    //DETECCIÓN DE VICTORIA O DERROTA
+    public boolean ganadorJugador(){
+        int[] casillaCabeza = diccionarioBotones.getCabeza().getValor();
+        Unidades unidadCabeza = partida.tablero[casillaCabeza[0]][casillaCabeza[1]];
+        if(unidadCabeza != null && unidadCabeza.isDeCiencias() != jugadorEsDeCiencias) return false;
+        Iterador<Diccionario<CheckBox, int[]>> it = diccionarioBotones.getIterador();
+        while(it.hasNext()){
+            int[] casilla = it.next().getValor();
+            if(partida.tablero[casilla[0]][casilla[1]] != null && partida.tablero[casilla[0]][casilla[1]].isDeCiencias() != jugadorEsDeCiencias) return false;
+        }
+        return true;
+    }
+    public boolean ganadorIA(){
+        int[] casillaCabeza = diccionarioBotones.getCabeza().getValor();
+        Unidades unidadCabeza = partida.tablero[casillaCabeza[0]][casillaCabeza[1]];
+        if(unidadCabeza != null && unidadCabeza.isDeCiencias() == jugadorEsDeCiencias) return false;
+        Iterador<Diccionario<CheckBox, int[]>> it = diccionarioBotones.getIterador();
+        while(it.hasNext()){
+            int[] casilla = it.next().getValor();
+            if(partida.tablero[casilla[0]][casilla[1]] != null && partida.tablero[casilla[0]][casilla[1]].isDeCiencias() == jugadorEsDeCiencias) return false;
+        }
+        return true;
+    }
+    //GENERAR UNIDAD RANDOM CADA 10 TURNOS
+    public void generarUnidadRandom(){
+        if(isTableroLleno()){
+            return;
+        }
+        ListaBasica<Unidades> lista1 = partida.getListaUnidades(true);
+        ListaBasica<Unidades> lista2 = partida.getListaUnidades(false);
+        Unidades u1 = lista1.random();
+        Unidades u2 = lista2.random();
+        int randX1 = Math.round((float) Math.random()*(tamannoTablero-1));
+        int randY1 = Math.round((float) Math.random()*(tamannoTablero-1));
+        int randX2 = Math.round((float) Math.random()*(tamannoTablero-1));
+        int randY2 = Math.round((float) Math.random()*(tamannoTablero-1));
+
+        while(!colocarUnidad(tablero, u1, randX1, randY1)){
+            randX1 = Math.round((float) Math.random()*(tamannoTablero-1));
+            randY1 = Math.round((float) Math.random()*(tamannoTablero-1));
+        }
+        while(!colocarUnidad(tablero, u2, randX2, randY2)){
+            randX2 = Math.round((float) Math.random()*(tamannoTablero-1));
+            randY2 = Math.round((float) Math.random()*(tamannoTablero-1));
+        }
+
+    }
+    public boolean isTableroLleno(){
+        return diccionarioBotones.getNumElementos() == tamannoTablero*tamannoTablero;
+    }
+    public ListaBasica<Diccionario<CheckBox, int[]>> getSublistaOpcionesTablero(boolean ciencias){
+        ListaBasica<Diccionario<CheckBox, int[]>> sublista = new ListaBasica<>(1);
+        int[] casillaCabeza = diccionarioBotones.getCabeza().getValor();
+        Unidades unidadCabeza = partida.tablero[casillaCabeza[0]][casillaCabeza[1]];
+        if(unidadCabeza.isDeCiencias() == ciencias) sublista.add(diccionarioBotones.getCabeza());
+        Iterador<Diccionario<CheckBox, int[]>> it = diccionarioBotones.getIterador();
+        while(it.hasNext()){
+            Diccionario<CheckBox, int[]> dict = it.next();
+            int[] casillaDict = dict.getValor();
+            if(partida.tablero[casillaDict[0]][casillaDict[1]] != null && partida.tablero[casillaDict[0]][casillaDict[1]].isDeCiencias() == ciencias) sublista.add(dict);
+        }
+        return sublista;
+    }
+    public int getDistancia(int[] uPos, int[] vPos){
+        return Math.abs(uPos[0] - vPos[0]) + Math.abs(uPos[1] - vPos[1]);
+    }
+
+    public GrafoPonderado<CheckBox> generarGrafoUnidades(){
+        ListaBasica<Diccionario<CheckBox, int[]>> sublistaUnidadesJugador = getSublistaOpcionesTablero(jugadorEsDeCiencias);
+        ListaBasica<Diccionario<CheckBox, int[]>> sublistaUnidadesIA = getSublistaOpcionesTablero(!jugadorEsDeCiencias);
+        Vertice<CheckBox> primerVertice = new Vertice<>(sublistaUnidadesJugador.get(0).getClave());
+        GrafoPonderado<CheckBox> grafo = new GrafoPonderado<>(primerVertice);
+        int numUnidadesJugador = sublistaUnidadesJugador.getNumElementos();
+        int numUnidadesIA = sublistaUnidadesIA.getNumElementos();
+        for(int i = 0; i < numUnidadesJugador; i++){
+            if(i == 0){
+                for(int j = 0; j < numUnidadesIA; j++){
+                    Vertice<CheckBox> v = new Vertice<>(sublistaUnidadesIA.get(j).getClave());
+                    grafo.addArista(primerVertice, v, getDistancia(sublistaUnidadesJugador.get(0).getValor(), sublistaUnidadesIA.get(j).getValor()));
+                }
+            }
+            for(int j = 0; j < numUnidadesIA; j++){
+                Vertice<CheckBox> v1 = new Vertice<>(sublistaUnidadesJugador.get(i).getClave());
+                Vertice<CheckBox> v = new Vertice<>(sublistaUnidadesIA.get(j).getClave());
+                grafo.addArista(v1, v, getDistancia(sublistaUnidadesJugador.get(i).getValor(), sublistaUnidadesIA.get(j).getValor()));
+            }
+        }
+        return grafo;
+    }
+
+    public void IA(){
+
+        ListaBasica<Diccionario<CheckBox, int[]>> listaOpcionesIA = getSublistaOpcionesTablero(!jugadorEsDeCiencias);
+        //for(int i = 0; i < listaOpcionesIA.getNumElementos(); i++){
+        //    System.out.println(listaOpcionesIA.get(i).getValor()[0] + " " + listaOpcionesIA.get(i).getValor()[1]);
+        //}
+        Diccionario<CheckBox, int[]> dicRandom = listaOpcionesIA.random();
+        CheckBox opcionRandom = dicRandom.getClave();
+        int[] casillaOpcionRandom = dicRandom.getValor();
+
+        int rangoMov = partida.tablero[casillaOpcionRandom[0]][casillaOpcionRandom[1]].getRango_movimiento();
+        ListaBasica<int[]> listaCasillasBuenasMover = getListaCasillasEnRgBueno(getCasillasEnRg(casillaOpcionRandom[0], casillaOpcionRandom[1], rangoMov));
+
+        int[] casillaAMoverse = listaCasillasBuenasMover.random();
+
+        if(partida.tablero[casillaAMoverse[0]][casillaAMoverse[1]] != null) {
+            if(partida.tablero[casillaAMoverse[0]][casillaAMoverse[1]].isDeCiencias() != jugadorEsDeCiencias){
+                atacar(partida.tablero[casillaOpcionRandom[0]][casillaOpcionRandom[1]], casillaAMoverse[0], casillaAMoverse[1]);
+                return;
+            }else {
+                while (partida.tablero[casillaAMoverse[0]][casillaAMoverse[1]] != null && partida.tablero[casillaAMoverse[0]][casillaAMoverse[1]].isDeCiencias() == jugadorEsDeCiencias) {
+                    casillaAMoverse = listaCasillasBuenasMover.random();
+                }
+            }
+        }
+
+        partida.tablero[casillaAMoverse[0]][casillaAMoverse[1]] = partida.tablero[casillaOpcionRandom[0]][casillaOpcionRandom[1]];
+        moverUnidad(opcionRandom, casillaAMoverse[0], casillaAMoverse[1]);
+
     }
 
 
