@@ -1,34 +1,20 @@
 package org.example.juegogui;
 
 import EstructurasDeDatos.Iterador;
-import EstructurasDeDatos.Lista;
 import EstructurasDeDatos.diccionario.Diccionario;
 import EstructurasDeDatos.diccionario.DiccionarioBasico;
-import EstructurasDeDatos.grafos.Arista;
 import EstructurasDeDatos.grafos.GrafoPonderado;
 import EstructurasDeDatos.grafos.Vertice;
 import EstructurasDeDatos.lista.ListaBasica;
-import EstructurasDeDatos.listaDoblementeEnlazada.IteradorListaDE;
 import Unidades.Unidades;
-import javafx.beans.InvalidationListener;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -40,9 +26,9 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.Arrays;
-import java.util.ResourceBundle;
+
+import org.apache.logging.log4j.*;
 
 public class PartidaControlador {
     @FXML
@@ -76,9 +62,8 @@ public class PartidaControlador {
     private CheckBox unidadSeleccionada;
     private GridPane tablero;
 
-    ObjectProperty<Unidades> unidad = new SimpleObjectProperty<>();
-
     protected static int turno;
+    private static final Logger log = LogManager.getLogger(PartidaControlador.class);
 
 
     //pantalla principal
@@ -786,9 +771,6 @@ public class PartidaControlador {
     public void IA(){
 
         ListaBasica<Diccionario<CheckBox, int[]>> listaOpcionesIA = getSublistaOpcionesTablero(!jugadorEsDeCiencias);
-        //for(int i = 0; i < listaOpcionesIA.getNumElementos(); i++){
-        //    System.out.println(listaOpcionesIA.get(i).getValor()[0] + " " + listaOpcionesIA.get(i).getValor()[1]);
-        //}
         Diccionario<CheckBox, int[]> dicRandom = listaOpcionesIA.random();
         CheckBox opcionRandom = dicRandom.getClave();
         int[] casillaOpcionRandom = dicRandom.getValor();
@@ -832,10 +814,10 @@ public class PartidaControlador {
             System.out.println("Error al cargar la pantalla principal");
         }
     }
-    protected void onBotonComoJugarClick(ActionEvent actionEvent) {
+    public void onBotonComoJugarClick() {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("/org/example/juegogui/funcionamiento-juego.fxml"));
-            Scene scene = new Scene(fxmlLoader.load(), 640, 480);
+            Scene scene = new Scene(fxmlLoader.load(), 600, 400);
             Stage stage = new Stage();
             stage.setTitle("comojugar");
             stage.setScene(scene);
