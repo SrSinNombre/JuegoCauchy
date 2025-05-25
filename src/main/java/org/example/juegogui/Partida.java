@@ -1,6 +1,7 @@
 package org.example.juegogui;
 
 import EstructurasDeDatos.Iterador;
+import EstructurasDeDatos.Lista;
 import EstructurasDeDatos.diccionario.*;
 import EstructurasDeDatos.grafos.*;
 import EstructurasDeDatos.lista.ListaBasica;
@@ -235,25 +236,6 @@ public class Partida {
         return false;
     }
 
-    public void transcursoPartida(boolean jugadorEsDeCiencias){ //esto iría en el controlador
-        iniciarPartida();
-        while(!finPartida()){
-            if(turno % 2 == 0){ //turno del jugador de ciencias
-                log.info("Turno de ciencias");
-
-                if(turno % 10 == 0) {
-                    while(!generarUnidadRandom(true)) generarUnidadRandom(true);
-                    while(!generarUnidadRandom(false)) generarUnidadRandom(false);
-                }
-                turno++;
-            }else if(turno % 2 == 1){ //turno del jugador de letras
-                log.info("Turno de letras");
-
-                turno++;
-            }
-        }
-    }
-
 
     public int getDistancia(Unidades u, Unidades v){
         int[] uPos = listaTodasLasUnidades.get(u);
@@ -287,14 +269,14 @@ public class Partida {
         Unidades unidadJugador = elegirUnidadIA(arista, !iaEsDeCiencias);
         int[] casillaUnidadIA = buscarUnidad(unidadIA);
         int[] casillaUnidadJugador = buscarUnidad(unidadJugador);
-        int xDiff = casillaUnidadJugador[0] - casillaUnidadIA[0]; //Si unidadIA está a la derecha xDiff < 0
+        int xDiff = casillaUnidadJugador[0] - casillaUnidadIA[0]; //Si unidadIA está a la derecha xDiff < 0, bien para cuando se quiera alejarse
         int yDiff = casillaUnidadJugador[1] - casillaUnidadIA[1];
         int deltaX = 0;
         int deltaY = 0;
         if(arista.getPeso() > unidadIA.getRango_ataque()){ //Si la unidad del jugador está fuera del rango de ataque, que se mueva
 
             if(unidadIA.getHP() >= 30){  //Si unidadIA tiene suficiente vida, que se acerque, pero si unidadIA tiene poca vida, que huya
-                if(xDiff != 0) deltaX = unidadIA.getRango_movimiento()*(xDiff/Math.abs(xDiff));
+                if(xDiff != 0) deltaX = unidadIA.getRango_movimiento()*(xDiff/Math.abs(xDiff)); //xDiff/Math.abs(xDiff) da 1 0 -1
                 if(yDiff != 0) deltaY = unidadIA.getRango_movimiento()*(yDiff/Math.abs(yDiff));
 
             }else{
@@ -304,17 +286,17 @@ public class Partida {
             }
         }else if(arista.getPeso() <= unidadIA.getRango_ataque()){
             if(unidadIA.getHP() >= 30) {
-                return null;
+                return null; //no elijo casilla a la que moverme y ataco
+                //retorna null si la otra está dentro del rango de ataque y unidadIA tiene más de 30 de vida
             }
-            else{ //Igual que en el anterior if, pero aquí distingo dos casos: que unidadIA pueda escapar del rango de ataque o que no pueda
+            else{ //Igual que en el anterior if
                 if(xDiff != 0) deltaX = unidadIA.getRango_movimiento()*(xDiff/Math.abs(xDiff));
                 if(yDiff != 0) deltaY = unidadIA.getRango_movimiento()*(yDiff/Math.abs(yDiff));
             }
         }
-        return new int[]{casillaUnidadIA[0] + deltaX, casillaUnidadIA[1] + deltaY};
+        return new int[]{casillaUnidadIA[0] + deltaX, casillaUnidadIA[1] + deltaY}; //imposible que los dos deltas sigan siendo 0 por los diffs
     }
     public GrafoPonderado<Unidades> generarGrafoUnidades(boolean iaEsDeCiencias){
-        try {
             DiccionarioBasico<Unidades, int[]> diccionarioUnidadesTableroIA = getDiccionarioUnidadesTablero(iaEsDeCiencias);
             Unidades cabezaIA = diccionarioUnidadesTableroIA.getCabeza().getClave();
             DiccionarioBasico<Unidades, int[]> diccionarioUnidadesTableroJugador = getDiccionarioUnidadesTablero(!iaEsDeCiencias);
@@ -342,9 +324,6 @@ public class Partida {
                 }
             }
             return grafoUnidades;
-        } catch (NullPointerException e) {
-            return null;
-        }
     }
 
     public void IA(boolean iaEsDeCiencias){

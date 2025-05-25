@@ -11,6 +11,7 @@ public class GrafoPonderado<T> {
 
     public GrafoPonderado(Vertice<T> primerVertice){
         this.primerVertice = primerVertice;
+        aristasTotales = new DiccionarioBasico<>();
     }
     public Vertice<T> getPrimerVertice() {
         return primerVertice;
@@ -29,6 +30,12 @@ public class GrafoPonderado<T> {
         ListaBasica<Vertice<T>> parejaVertices = new ListaBasica<>(2);
         parejaVertices.add(v1);
         parejaVertices.add(v2);
+        if(aristasTotales.getNumElementos() == 0) {
+            aristasTotales.agregar(parejaVertices, pesoArista);
+            v2.verticesUnidos.add(v1);
+            v1.verticesUnidos.add(v2);
+            return true;
+        }
         if(aristasTotales.getCabeza().getClave().equals(parejaVertices)) return false; //entre dos vértices solo hay una arista
         Iterador<Diccionario<ListaBasica<Vertice<T>>, Integer>> it = aristasTotales.getIterador();
         while(it.hasNext()){
