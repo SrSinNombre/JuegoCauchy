@@ -7,6 +7,7 @@ import EstructurasDeDatos.grafos.GrafoPonderado;
 import EstructurasDeDatos.grafos.Vertice;
 import EstructurasDeDatos.lista.ListaBasica;
 import Unidades.Unidades;
+import com.google.gson.Gson;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -25,6 +26,8 @@ import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
 
@@ -39,7 +42,6 @@ public class PartidaControlador {
     private Label seleccionaTamanno;
     protected int tamannoTablero;
     protected int tamannoCasilla;
-    private static final Logger log = LogManager.getLogger(Partida.class);
 
     private final Label labelTurno = new Label();
     Label labelUnidad = new Label();
@@ -82,7 +84,7 @@ public class PartidaControlador {
         }
         catch (IOException e) {
             e.printStackTrace();
-            log.info("Error al cargar la pantalla principal");
+            log.info("Error al cargar la pantalla de escoger bando");
         }
     }
     @FXML
@@ -97,7 +99,7 @@ public class PartidaControlador {
         }
         catch (IOException e) {
             e.printStackTrace();
-            log.info("Error al cargar la pantalla principal");
+            log.info("Error al cargar la pantalla de salir del juego");
         }
     }
 
@@ -114,7 +116,7 @@ public class PartidaControlador {
         }
         catch (IOException e) {
             e.printStackTrace();
-            log.info("Error al cargar la pantalla principal");
+            log.info("Error al cargar la pantalla del bando de ciencias");
         }
     }
     @FXML
@@ -130,7 +132,7 @@ public class PartidaControlador {
         }
         catch (IOException e) {
             e.printStackTrace();
-            log.info("Error al cargar la pantalla principal");
+            log.info("Error al cargar la pantalla del bando de letras");
         }
     }
     @FXML
@@ -153,6 +155,7 @@ public class PartidaControlador {
     @FXML
     public void onSiClick() {
         System.exit(0);
+        log.info("Finalización del proceso de ejecución del juego");
     }
 
     @FXML
@@ -241,23 +244,23 @@ public class PartidaControlador {
             colocarUnidad(gridPane, c2, tamannoTablero-1, tamannoTablero-1);
             colocarUnidad(gridPane, l1, 0, 0);
             colocarUnidad(gridPane, l2, tamannoTablero-1, 0);
-            log.info("El " + c1 + "se ha colocado en " + "0" + "x" + tamannoTablero-1");
-                    log.info("El " + c2 + "se ha colocado en " + tamannoTablero-1 + "x" + tamannoTablero-1");
+            log.info("El " + c1 + "se ha colocado en " + "0" + "x" + "tamannoTablero-1");
+                    log.info("El " + c2 + "se ha colocado en " + "tamannoTablero-1" + "x" + "tamannoTablero-1");
                             log.info("El " + l1 + "se ha colocado en " + "0" + "x" + "0");
-                                    log.info("El " + l2 + "se ha colocado en " + tamannoTablero-1 + "x" + "0" ");
+                                    log.info("El " + l2 + "se ha colocado en " + "tamannoTablero-1" + "x" + "0");
         }else if(partida.turno == 1){
             colocarUnidad(gridPane, l1, 0, tamannoTablero-1);
             colocarUnidad(gridPane, l2, tamannoTablero-1, tamannoTablero-1);
             colocarUnidad(gridPane, c1, 0, 0);
             colocarUnidad(gridPane, c2, tamannoTablero-1, 0);
-            log.info("El " + l1 + "se ha colocado en " + "0" + "x" + tamannoTablero-1");
-                    log.info("El " + l2 + "se ha colocado en " + tamannoTablero-1 + "x" + tamannoTablero-1");
+            log.info("El " + l1 + "se ha colocado en " + "0" + "x" + "tamannoTablero-1");
+                    log.info("El " + l2 + "se ha colocado en " + "tamannoTablero-1" + "x" + "tamannoTablero-1");
                                     log.info("El " + c1 + "se ha colocado en " + "0" + "x" + "0");
-                                            log.info("El " + c2 + "se ha colocado en " + tamannoTablero-1 + "x" + "0" ");
+                                            log.info("El " + c2 + "se ha colocado en " + "tamannoTablero-1" + "x" + "0");
         }
         turno = partida.turno;
         log.info("La partida ha comenzado");
-        log.info("El tablero es de" + tamannoTablero + "x" + tamannoTablero);
+        log.info("El tablero es de{}x{}", tamannoTablero, tamannoTablero);
     }
 
     public void onEmpezarPartidaCienciasClick(ActionEvent actionEvent){
@@ -434,6 +437,7 @@ public class PartidaControlador {
         stage1.setTitle("CONQUISTA");
         stage1.setScene(scene1);
         stage1.show();
+        log.info("Partida iniciada, el jugador ha escogido ciencias");
     }//esto mismo que he hecho si el usuario elige ciencias hay que hacerlo si el usuario elige letras, que lo haga otro
 
     public void onEmpezarPartidaLetrasClick(ActionEvent actionEvent){
@@ -610,6 +614,7 @@ public class PartidaControlador {
         stage1.setTitle("CONQUISTA");
         stage1.setScene(scene1);
         stage1.show();
+        log.info("Partida iniciada, el jugador ha escogido letras");
     }
 
     //metodo auxiliar
@@ -638,6 +643,7 @@ public class PartidaControlador {
         textFieldCoordY.setOpacity(0);
         validarMovimiento.setDisable(true);
         validarMovimiento.setOpacity(0);
+        log.info("Rollback ejecutado, restaurando a valores por defecto");
     }
 
     public void onUnidadClick(ActionEvent actionEvent){
@@ -674,6 +680,7 @@ public class PartidaControlador {
                 btnMover.setDisable(true);
                 btnAtacar.setDisable(true);
             }
+            log.info("{} seleccionado", u.getNombre());
         } catch (NullPointerException e) {
             rollback();
         }
@@ -701,6 +708,7 @@ public class PartidaControlador {
                 nuevaListaCasillas.add(casilla);
             }
         }
+        log.info("Rango de casillas de " + u.getNombre() + " obtenido");
         return nuevaListaCasillas;
     }
     public void onMoverClick(ActionEvent actionEvent){
@@ -731,15 +739,15 @@ public class PartidaControlador {
             return false;
         }
     }
-    public boolean moverUnidad(CheckBox opcionUnidad, int x, int y, int turno){//este es el método bueno, el otro se quita
+    public boolean moverUnidad(CheckBox opcionUnidad, int x, int y){//este es el método bueno, el otro se quita
         if(!sePuedeMoverA(opcionUnidad, x, y)) return false;
         int[] uPosInicial = diccionarioBotones.get(opcionUnidad);
         GridPane.setConstraints(opcionUnidad, x, y);
         partida.tablero[uPosInicial[0]][uPosInicial[1]] = null;
         diccionarioBotones.delete(opcionUnidad);
         diccionarioBotones.agregar(opcionUnidad, new int[]{x, y});
+        log.info("El" + opcionUnidad + " se ha movido a la casilla " + x + "," + y + "en el turno " + turno);
         return true;
-        log.info("El" + opcionUnidad + "se ha movido a la casilla " + x + "x" + y + "en el turno" + turno);
 
     }
     public void onValidarMovimientoClick(ActionEvent actionEvent){
@@ -758,6 +766,7 @@ public class PartidaControlador {
                 stage.setTitle("Error");
                 stage.setScene(scene);
                 stage.show();
+                log.info("No se puede mover la unidad a esa casilla, está fuera de rango");
             }else {
                 moverUnidad(unidadSeleccionada, x, y);
                 colocarUnidad(partida.gridPane, u, x, y);
@@ -772,7 +781,7 @@ public class PartidaControlador {
                     }
                     catch (IOException e) {
                         e.printStackTrace();
-                        log.info("Error al cargar la pantalla principal");
+                        log.info("Error al cargar la pantalla de ganador jugador");
                     }//abrir nueva ventana con el endscreen de cuando gana el jugador
                 }else if(ganadorIA()){
                     try {
@@ -785,7 +794,7 @@ public class PartidaControlador {
                     }
                     catch (IOException e) {
                         e.printStackTrace();
-                        log.info("Error al cargar la pantalla principal");
+                        log.info("Error al cargar la pantalla de ganador IA");
                     }//abrir nueva ventana con el endscreen de cuando gana la IA
 
                 }else{
@@ -794,6 +803,7 @@ public class PartidaControlador {
                     labelTurno.setText(Integer.toString(turno));
                     IA();
                     if(turno % 10 == 0) generarUnidadRandom();
+                    log.info("Turno actualizado");
                 }
             }
         }catch(NumberFormatException e){
@@ -849,10 +859,10 @@ public class PartidaControlador {
             GridPane.setConstraints(opcionAtacado, 3, tamannoTablero);
             partida.listaTodasLasUnidades.delete(atacado);
             partida.tablero[x][y] = null;
-            log.info("El " + atacado + "ha muerto")
+            log.info("El " + atacado + "ha muerto");
         }
         else{
-            log.info("El " + atacado + "tiene" + atacado.getHP() + "de HP")
+            log.info("El " + atacado + " tiene " + atacado.getHP() + " de HP");
         }
 
 
@@ -885,7 +895,7 @@ public class PartidaControlador {
                 }
                 catch (IOException e) {
                     e.printStackTrace();
-                    System.err.println("Error al cargar la pantalla principal");//abrir nueva ventana con el endscreen de cuando gana el jugador
+                    log.info("Error al cargar la pantalla de ganador jugador");//abrir nueva ventana con el endscreen de cuando gana el jugador
                 }
             } else if(ganadorIA()) {
                     try {
@@ -898,7 +908,7 @@ public class PartidaControlador {
                     }
                     catch (IOException e) {
                         e.printStackTrace();
-                        System.err.println("Error al cargar la pantalla principal");//abrir nueva ventana con el endscreen de cuando gana la IA
+                        log.info("Error al cargar la pantalla de ganador IA");//abrir nueva ventana con el endscreen de cuando gana la IA
                     }
             }else{
                 rollback();
@@ -906,6 +916,7 @@ public class PartidaControlador {
                 labelTurno.setText(Integer.toString(turno));
                 IA();
                 if(turno % 10 == 0) generarUnidadRandom();
+                log.info("Turno actualizado");
             }
         }catch(NumberFormatException e){
             VBox pantalla = new VBox();
@@ -929,11 +940,8 @@ public class PartidaControlador {
             int[] casilla = it.next().getValor();
             if(partida.tablero[casilla[0]][casilla[1]] != null && partida.tablero[casilla[0]][casilla[1]].isDeCiencias() != jugadorEsDeCiencias) return false;
         }
+        log.info("Ha ganado el jugador");
         return true;
-        if (ganadorJugador() == true){
-            log.info("Ha ganado el jugador");
-        }
-
     }
     public boolean ganadorIA(){
         int[] casillaCabeza = diccionarioBotones.getCabeza().getValor();
@@ -944,10 +952,8 @@ public class PartidaControlador {
             int[] casilla = it.next().getValor();
             if(partida.tablero[casilla[0]][casilla[1]] != null && partida.tablero[casilla[0]][casilla[1]].isDeCiencias() == jugadorEsDeCiencias) return false;
         }
+        log.info("Ha ganado la IA");
         return true;
-        if (ganadorIA() == true){
-            log.info("Ha ganado la IA");
-        }
     }
     //GENERAR UNIDAD RANDOM CADA 10 TURNOS
     public void generarUnidadRandom(){
@@ -971,12 +977,16 @@ public class PartidaControlador {
             randX2 = Math.round((float) Math.random()*(tamannoTablero-1));
             randY2 = Math.round((float) Math.random()*(tamannoTablero-1));
         }
-        log.info("Se ha generado un " + u1 + "en " + randX1 + "x" + randY1);
-        log.info("Se ha generado un " + u2 + "en " + randX2 + "x" + randY2);
+        log.info("Se ha generado un " + u1 + " en " + randX1 + "," + randY1);
+        log.info("Se ha generado un " + u2 + " en " + randX2 + "," + randY2);
 
     }
     public boolean isTableroLleno(){
-        return diccionarioBotones.getNumElementos() == tamannoTablero*tamannoTablero;
+        if(diccionarioBotones.getNumElementos() == tamannoTablero*tamannoTablero){
+            log.info("El tablero está lleno");
+            return true;
+        }
+        else return false;
     }
     public ListaBasica<Diccionario<CheckBox, int[]>> getSublistaOpcionesTablero(boolean ciencias){
         ListaBasica<Diccionario<CheckBox, int[]>> sublista = new ListaBasica<>(1);
@@ -1015,6 +1025,7 @@ public class PartidaControlador {
                 grafo.addArista(v1, v, getDistancia(sublistaUnidadesJugador.get(i).getValor(), sublistaUnidadesIA.get(j).getValor()));
             }
         }
+        log.info("Grafo generado");
         return grafo;
     }
 
@@ -1057,6 +1068,7 @@ public class PartidaControlador {
             stage.setTitle("Pausa");
             stage.setScene(scene);
             stage.show();
+            log.info("Botón de pausa pulsado");
 
         }
         catch (IOException e) {
@@ -1072,6 +1084,7 @@ public class PartidaControlador {
             stage.setTitle("comojugar");
             stage.setScene(scene);
             stage.show();
+            log.info("Botón de cómo jugar pulsado");
         }
         catch (IOException e) {
             e.printStackTrace();
@@ -1080,6 +1093,7 @@ public class PartidaControlador {
     }
     public void onBotonReanudarClick(ActionEvent actionEvent){
         Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+        log.info("Partida reanudada");
         stage.close();
     }
     public void onBotonGuardarClick(ActionEvent actionEvent){
@@ -1090,6 +1104,7 @@ public class PartidaControlador {
             stage.setTitle("CONQUISTA");
             stage.setScene(scene);
             stage.show();
+            log.info("Partida guardada");
         }
         catch (IOException e) {
             e.printStackTrace();
@@ -1106,10 +1121,11 @@ public class PartidaControlador {
             stage.setTitle("CONQUISTA");
             stage.setScene(scene);
             stage.show();
+            log.info("Se ha salido del menú de pausa");
         }
         catch (IOException e) {
             e.printStackTrace();
-            System.out.println("Error al cargar la pantalla principal");
+            log.info("Error al cargar la pantalla de preguntas la vuelta al menú");
         }
     }
 
@@ -1124,10 +1140,11 @@ public class PartidaControlador {
             stage.setTitle("CONQUISTA");
             stage.setScene(scene);
             stage.show();
+            log.info("Se ha vuelto a la pantalla principal");
         }
         catch (IOException e) {
             e.printStackTrace();
-            System.out.println("Error al cargar la pantalla principal");
+            log.info("Error al cargar la pantalla principal");
         }
     }
 
@@ -1140,10 +1157,31 @@ public class PartidaControlador {
             stage.setTitle("CONQUISTA");
             stage.setScene(scene);
             stage.show();
+            log.info("Se ha vuelto a la pantalla de pausa");
         }
         catch (IOException e) {
             e.printStackTrace();
-            System.out.println("Error al cargar la pantalla principal");
+            System.out.println("Error al cargar la pantalla de pausa");
+        }
+    }
+
+    //guardado
+    public void guardar(Partida partida, String filename) {
+        Gson gson = new Gson();
+        try (FileWriter writer = new FileWriter(filename)) {
+            gson.toJson(partida, writer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static Partida cargar(String filename) {
+        Gson gson = new Gson();
+        try (FileReader reader = new FileReader(filename)) {
+            return gson.fromJson(reader, Partida.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 }

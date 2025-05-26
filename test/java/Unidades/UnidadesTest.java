@@ -11,8 +11,8 @@ class UnidadesTest {
 
     @BeforeEach
     void setUp() {
-        unidad = new Unidades("Soldado", 100, 20, 10, 5, 3);
-        // Asumo un constructor: Unidades(String nombre, int hp, int ataque, int defensa, int rangoMovimiento, int rangoAtaque)
+        unidad = new Unidades("Soldado", 100, 20, 10, 5, 3, true);
+        // Asumo un constructor: Unidades(String nombre, int hp, int ataque, int defensa, int rangoMovimiento, int rangoAtaque, boolean true)
     }
 
     @Test

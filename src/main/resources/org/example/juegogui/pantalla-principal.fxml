@@ -36,7 +36,7 @@
             <Insets top="40.0" />
          </VBox.margin>
       </Button>
-      <Label alignment="CENTER" prefHeight="18.0" prefWidth="359.0" text="Había pensado en poner aquí textos random como en el minecraft">
+      <Label alignment="CENTER" prefHeight="18.0" prefWidth="359.0" text="Juego desarrollado por Faateh, Nico, Adrián y Aitor">
          <VBox.margin>
             <Insets top="30.0" />
          </VBox.margin>

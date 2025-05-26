@@ -1,5 +1,6 @@
 package org.example.juegogui;
 
+import javafx.event.ActionEvent;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
