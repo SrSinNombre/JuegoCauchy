@@ -30,10 +30,9 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.UUID;
 
 import org.apache.logging.log4j.*;
-
-import javax.swing.*;
 
 public class PartidaControlador {
     @FXML
@@ -80,6 +79,7 @@ public class PartidaControlador {
             Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
             stage.setScene(scene);
             stage.show();
+            log.info("Nueva partida iniciada");
         }
         catch (IOException e) {
             e.printStackTrace();
@@ -94,6 +94,7 @@ public class PartidaControlador {
             Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
             stage.setScene(scene);
             stage.show();
+            log.info("El jugador quiere salir del juego");
         }
         catch (IOException e) {
             e.printStackTrace();
@@ -111,6 +112,7 @@ public class PartidaControlador {
             stage.setTitle("CONQUISTA");
             stage.setScene(scene);
             stage.show();
+            log.info("El jugador ha elegido el bando de ciencias");
         }
         catch (IOException e) {
             e.printStackTrace();
@@ -126,7 +128,7 @@ public class PartidaControlador {
             stage.setTitle("CONQUISTA");
             stage.setScene(scene);
             stage.show();
-
+            log.info("El jugador ha elegido el bando de letras");
         }
         catch (IOException e) {
             e.printStackTrace();
@@ -142,6 +144,7 @@ public class PartidaControlador {
             stage.setTitle("CONQUISTA");
             stage.setScene(scene);
             stage.show();
+            log.info("Volviendo a la pantalla principal");
         }
         catch (IOException e) {
             e.printStackTrace();
@@ -165,6 +168,7 @@ public class PartidaControlador {
             stage.setTitle("CONQUISTA");
             stage.setScene(scene);
             stage.show();
+            log.info("Volviendo a la pantalla principal");
         }
         catch (IOException e) {
             e.printStackTrace();
@@ -182,10 +186,11 @@ public class PartidaControlador {
             stage.setTitle("CONQUISTA");
             stage.setScene(scene);
             stage.show();
+            log.info("Cargando la pantalla de escoger bando");
         }
         catch (IOException e) {
             e.printStackTrace();
-            log.info("Error al cargar la pantalla principal");
+            log.info("Error al cargar la pantalla de escoger bando");
         }
     }
     public void onOpcion8x8Click(){
@@ -214,7 +219,7 @@ public class PartidaControlador {
             checkBox.setOnAction(this::onUnidadClick);
 
             diccionarioBotones.agregar(checkBox, new int[]{x, y});
-            log.info("Unidad agregada");
+            log.info("{} agregado en la posición {},{}", u.getNombre(), x, y);
 
 
             int[] casilla = new int[]{x, y};
@@ -226,6 +231,7 @@ public class PartidaControlador {
             if(partida.propiedadCasilla(casilla).equals("+10AT")) u.subirAtaque(10);
             if(partida.propiedadCasilla(casilla).equals("+5DF")) u.subirDefensa(5);
             if(partida.propiedadCasilla(casilla).equals("+10DF")) u.subirDefensa(10);
+            if(!partida.propiedadCasilla(casilla).equals("null")) log.info("{} ha conseguido {}", u.getNombre(), partida.propiedadCasilla(casilla));
             return true;
         }else return false;
     }
@@ -233,6 +239,7 @@ public class PartidaControlador {
     public void iniciarPartida(GridPane gridPane, boolean jugadorEsDeCiencias){//este es el método bueno, el otro se quita
         partida = new Partida(tamannoTablero, tamannoTablero, jugadorEsDeCiencias);
         this.jugadorEsDeCiencias = jugadorEsDeCiencias;
+        log.info("Iniciando partida");
         Unidades c1 = partida.getListaUnidades(true).random();
         Unidades c2 = partida.getListaUnidades(true).random();
         Unidades l1 = partida.getListaUnidades(false).random();
@@ -242,19 +249,11 @@ public class PartidaControlador {
             colocarUnidad(gridPane, c2, tamannoTablero-1, tamannoTablero-1);
             colocarUnidad(gridPane, l1, 0, 0);
             colocarUnidad(gridPane, l2, tamannoTablero-1, 0);
-            log.info("El " + c1 + "se ha colocado en " + "0" + "x" + "tamannoTablero-1");
-                    log.info("El " + c2 + "se ha colocado en " + "tamannoTablero-1" + "x" + "tamannoTablero-1");
-                            log.info("El " + l1 + "se ha colocado en " + "0" + "x" + "0");
-                                    log.info("El " + l2 + "se ha colocado en " + "tamannoTablero-1" + "x" + "0");
         }else if(partida.turno == 1){
             colocarUnidad(gridPane, l1, 0, tamannoTablero-1);
             colocarUnidad(gridPane, l2, tamannoTablero-1, tamannoTablero-1);
             colocarUnidad(gridPane, c1, 0, 0);
             colocarUnidad(gridPane, c2, tamannoTablero-1, 0);
-            log.info("El " + l1 + "se ha colocado en " + "0" + "x" + "tamannoTablero-1");
-                    log.info("El " + l2 + "se ha colocado en " + "tamannoTablero-1" + "x" + "tamannoTablero-1");
-                                    log.info("El " + c1 + "se ha colocado en " + "0" + "x" + "0");
-                                            log.info("El " + c2 + "se ha colocado en " + "tamannoTablero-1" + "x" + "0");
         }
         turno = partida.turno;
         log.info("La partida ha comenzado");
@@ -313,6 +312,7 @@ public class PartidaControlador {
         botonPausa.setLayoutY(10);
         botonPausa.setFont(new Font("System Bold", 30));
         botonPausa.setOnAction(this::onBotonPausaClick);
+        log.info("Botón de pausa añadido");
 
         // VBox (Panel lateral izquierdo)
         VBox panelLateral = new VBox();
@@ -366,7 +366,7 @@ public class PartidaControlador {
         Label labelAtaque = new Label("ATAQUE");
         labelAtaque.setFont(Font.font("System Bold Italic", 23));
         labelAtaque.setTextFill(javafx.scene.paint.Color.LIME);
-        labelAtaque.setPrefSize(256, 54);;
+        labelAtaque.setPrefSize(256, 54);
         HBox hboxAtaque = new HBox(new AnchorPane(new ImageView(new Image("file:src/main/java/Sprites/atq.png"))), labelAT);
         hboxAtaque.setAlignment(Pos.CENTER);
         hboxAtaque.setPrefSize(470, 50);
@@ -405,6 +405,8 @@ public class PartidaControlador {
                 labelDefensa, hboxDefensa,
                 hboxAcciones
         );
+
+        log.info("Menú lateral de información añadido");
 
         //campos de texto + boton validarMovimiento
         textFieldCoordX.setPromptText("Introduce coordenada X...");
@@ -490,6 +492,7 @@ public class PartidaControlador {
         botonPausa.setLayoutY(10);
         botonPausa.setFont(new Font("System Bold", 30));
         botonPausa.setOnAction(this::onBotonPausaClick);
+        log.info("Botón de pausa añadido");
 
         // VBox (Panel lateral izquierdo)
         VBox panelLateral = new VBox();
@@ -543,7 +546,7 @@ public class PartidaControlador {
         Label labelAtaque = new Label("ATAQUE");
         labelAtaque.setFont(Font.font("System Bold Italic", 23));
         labelAtaque.setTextFill(javafx.scene.paint.Color.LIME);
-        labelAtaque.setPrefSize(256, 54);;
+        labelAtaque.setPrefSize(256, 54);
         HBox hboxAtaque = new HBox(new AnchorPane(new ImageView(new Image("file:src/main/java/Sprites/atq.png"))), labelAT);
         hboxAtaque.setAlignment(Pos.CENTER);
         hboxAtaque.setPrefSize(470, 50);
@@ -582,6 +585,7 @@ public class PartidaControlador {
                 labelDefensa, hboxDefensa,
                 hboxAcciones
         );
+        log.info("Menú lateral de información añadido");
 
         //campos de texto + boton validarMovimiento
         textFieldCoordX.setPromptText("Introduce coordenada X...");
@@ -706,7 +710,7 @@ public class PartidaControlador {
                 nuevaListaCasillas.add(casilla);
             }
         }
-        log.info("Rango de casillas de " + u.getNombre() + " obtenido");
+        log.info("Rango de casillas de {} obtenido", u.getNombre());
         return nuevaListaCasillas;
     }
     public void onMoverClick(ActionEvent actionEvent){
@@ -719,6 +723,7 @@ public class PartidaControlador {
         validarMovimiento.setOpacity(1);
         validarMovimiento.setOnAction(this::onValidarMovimientoClick);
         validarMovimiento.setText("Validar movimiento");
+        log.info("Botón mover pulsado");
 
     }
     public boolean sePuedeMoverA(CheckBox opcionUnidad, int x, int y){//este es el método bueno, el otro se quita
@@ -744,7 +749,7 @@ public class PartidaControlador {
         partida.tablero[uPosInicial[0]][uPosInicial[1]] = null;
         diccionarioBotones.delete(opcionUnidad);
         diccionarioBotones.agregar(opcionUnidad, new int[]{x, y});
-        log.info("El" + opcionUnidad + " se ha movido a la casilla " + x + "," + y + "en el turno " + turno);
+        log.info("El {} se ha movido a la casilla {},{} en el turno {}", opcionUnidad, x, y, turno);
         return true;
 
     }
@@ -776,6 +781,7 @@ public class PartidaControlador {
                         stage.setTitle("comojugar");
                         stage.setScene(scene);
                         stage.show();
+                        log.info("Partida finalizada, ha ganado el jugador");
                     }
                     catch (IOException e) {
                         e.printStackTrace();
@@ -789,6 +795,7 @@ public class PartidaControlador {
                         stage.setTitle("comojugar");
                         stage.setScene(scene);
                         stage.show();
+                        log.info("Partida finalizada, ha ganado la IA");
                     }
                     catch (IOException e) {
                         e.printStackTrace();
@@ -813,6 +820,7 @@ public class PartidaControlador {
             stage.setTitle("Error");
             stage.setScene(scene);
             stage.show();
+            log.info("Entrada por teclado no válida");
         }
     }
 
@@ -834,10 +842,11 @@ public class PartidaControlador {
                 validarMovimiento.setOnAction(this::onValidarAtaqueClick);
             }
         }
+        log.info("Botón atacar pulsado");
     }
 
     public CheckBox buscarOpcionEn(int[] casilla){
-
+        log.info("Buscando opción en la casilla {},{}", casilla[0], casilla[1]);
         if(Arrays.equals(diccionarioBotones.getCabeza().getValor(), casilla)) return diccionarioBotones.getCabeza().getClave();
         Iterador<Diccionario<CheckBox, int[]>> it = diccionarioBotones.getIterador();
         while(it.hasNext()){
@@ -851,16 +860,16 @@ public class PartidaControlador {
         double factorAleatorio = Math.random() * 2;
         double danoInfligido = Math.abs(factorAleatorio*atacante.getAtaque() - atacado.getDefensa());
         atacado.subirHP(-danoInfligido);
-        log.info("El " + atacante + "ha atacado al " + atacado);
+        log.info("El {} ha atacado al {}", atacante, atacado);
         if(atacado.isUnidadMuerta()){
             CheckBox opcionAtacado = buscarOpcionEn(new int[]{x, y});
             GridPane.setConstraints(opcionAtacado, 3, tamannoTablero);
             partida.listaTodasLasUnidades.delete(atacado);
             partida.tablero[x][y] = null;
-            log.info("El " + atacado + "ha muerto");
+            log.info("El {} ha muerto", atacado);
         }
         else{
-            log.info("El " + atacado + " tiene " + atacado.getHP() + " de HP");
+            log.info("El {} tiene {} de HP", atacado, atacado.getHP());
         }
 
 
@@ -890,6 +899,7 @@ public class PartidaControlador {
                     stage.setTitle("comojugar");
                     stage.setScene(scene);
                     stage.show();
+                    log.info("Partida finalizada, ha ganado el jugador");
                 }
                 catch (IOException e) {
                     e.printStackTrace();
@@ -903,6 +913,7 @@ public class PartidaControlador {
                         stage.setTitle("comojugar");
                         stage.setScene(scene);
                         stage.show();
+                        log.info("Partida finalizada, ha ganado la IA");
                     }
                     catch (IOException e) {
                         e.printStackTrace();
@@ -925,6 +936,7 @@ public class PartidaControlador {
             stage.setTitle("Error");
             stage.setScene(scene);
             stage.show();
+            log.info("Entrada por teclado no válida");
         }
     }
 
@@ -975,8 +987,8 @@ public class PartidaControlador {
             randX2 = Math.round((float) Math.random()*(tamannoTablero-1));
             randY2 = Math.round((float) Math.random()*(tamannoTablero-1));
         }
-        log.info("Se ha generado un " + u1 + " en " + randX1 + "," + randY1);
-        log.info("Se ha generado un " + u2 + " en " + randX2 + "," + randY2);
+        log.info("Se ha generado aleatoriamente un {} en {},{}", u1, randX1, randY1);
+        log.info("Se ha generado aleatoriamente un {} en {},{}", u2, randX2, randY2);
 
     }
     public boolean isTableroLleno(){
@@ -997,6 +1009,7 @@ public class PartidaControlador {
             int[] casillaDict = dict.getValor();
             if(partida.tablero[casillaDict[0]][casillaDict[1]] != null && partida.tablero[casillaDict[0]][casillaDict[1]].isDeCiencias() == ciencias) sublista.add(dict);
         }
+        log.info("Sublista generada");
         return sublista;
     }
     public int getDistancia(int[] uPos, int[] vPos){
@@ -1042,6 +1055,7 @@ public class PartidaControlador {
         if(partida.tablero[casillaAMoverse[0]][casillaAMoverse[1]] != null) {
             if(partida.tablero[casillaAMoverse[0]][casillaAMoverse[1]].isDeCiencias() != jugadorEsDeCiencias){
                 atacar(partida.tablero[casillaOpcionRandom[0]][casillaOpcionRandom[1]], casillaAMoverse[0], casillaAMoverse[1]);
+                log.info("El {} ha elegido atacar a la unidad en {},{}", partida.tablero[casillaOpcionRandom[0]][casillaOpcionRandom[1]].getNombre(), casillaAMoverse[0], casillaAMoverse[1]);
                 return;
             }else {
                 while (partida.tablero[casillaAMoverse[0]][casillaAMoverse[1]] != null && partida.tablero[casillaAMoverse[0]][casillaAMoverse[1]].isDeCiencias() == jugadorEsDeCiencias) {
@@ -1052,6 +1066,7 @@ public class PartidaControlador {
 
         partida.tablero[casillaAMoverse[0]][casillaAMoverse[1]] = partida.tablero[casillaOpcionRandom[0]][casillaOpcionRandom[1]];
         moverUnidad(opcionRandom, casillaAMoverse[0], casillaAMoverse[1]);
+        log.info("El {} ha elegido moverse a {},{}", partida.tablero[casillaOpcionRandom[0]][casillaOpcionRandom[1]].getNombre(), casillaAMoverse[0], casillaAMoverse[1]);
 
     }
 
@@ -1071,7 +1086,7 @@ public class PartidaControlador {
         }
         catch (IOException e) {
             e.printStackTrace();
-            System.out.println("Error al cargar la pantalla principal");
+            System.out.println("Error al cargar la pantalla de pausa");
         }
     }
     public void onBotonComoJugarClick() {
@@ -1086,7 +1101,7 @@ public class PartidaControlador {
         }
         catch (IOException e) {
             e.printStackTrace();
-            System.err.println("Error al cargar la pantalla principal");
+            System.err.println("Error al cargar la pantalla de cómo jugar");
         }
     }
     public void onBotonReanudarClick(ActionEvent actionEvent){
@@ -1102,11 +1117,12 @@ public class PartidaControlador {
             stage.setTitle("CONQUISTA");
             stage.setScene(scene);
             stage.show();
+            guardar(partida, UUID.randomUUID().toString());
             log.info("Partida guardada");
         }
         catch (IOException e) {
             e.printStackTrace();
-            System.out.println("Error al cargar la pantalla principal");
+            System.out.println("Error al cargar la pantalla de guardado");
         }
 
     }
@@ -1123,7 +1139,7 @@ public class PartidaControlador {
         }
         catch (IOException e) {
             e.printStackTrace();
-            log.info("Error al cargar la pantalla de preguntas la vuelta al menú");
+            log.info("Error al cargar la pantalla de preguntar la vuelta al menú");
         }
     }
 
