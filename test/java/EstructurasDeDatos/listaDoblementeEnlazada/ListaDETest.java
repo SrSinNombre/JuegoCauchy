@@ -86,7 +86,7 @@ class ListaDETest {
         lista.add(30);
         lista.delete(1); // suponiendo elimina por índice
         assertEquals(2, lista.getNumElementos());
-        assertEquals(30, lista.get(1));
+        assertEquals(30, lista.getCabeza().getSiguiente().getDato());
     }
 
     @Test

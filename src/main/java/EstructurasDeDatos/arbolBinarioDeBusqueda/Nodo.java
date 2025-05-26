@@ -15,6 +15,19 @@ public class Nodo<T> {
     public void setDato(T dato){
         this.dato = dato;
     }
+    public Nodo<T> getDerecho() {
+        return derecho;
+    }
+    public Nodo<T> getIzquierdo() {
+        return izquierdo;
+    }
+    public void setDerecho(Nodo<T> derecho) {
+        this.derecho = derecho;
+    }
+    public void setIzquierdo(Nodo<T> izquierdo) {
+        this.izquierdo = izquierdo;
+    }
+
     public int obtenerGrado(){
         int grado = 0;
         if(izquierdo != null){

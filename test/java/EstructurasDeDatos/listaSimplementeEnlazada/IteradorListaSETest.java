@@ -1,5 +1,6 @@
 package EstructurasDeDatos.listaSimplementeEnlazada;
 
+import EstructurasDeDatos.Iterador;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -8,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class IteradorListaSETest {
 
     private ListaSE<Integer> lista;
-    private IteradorListaSE<Integer> iterador;
+    private Iterador<Integer> iterador;
 
     @BeforeEach
     void setUp() {
@@ -43,11 +44,11 @@ class IteradorListaSETest {
         assertEquals(10, iterador.next());
         iterador.delete();
         assertEquals(2, lista.getNumElementos());
-        assertEquals(20, lista.get(0));
+        assertEquals(20, lista.getCabeza().getDato());
 
         assertEquals(20, iterador.next());
         iterador.delete();
         assertEquals(1, lista.getNumElementos());
-        assertEquals(30, lista.get(0));
+        assertEquals(30, lista.getCabeza().getDato());
     }
 }

@@ -11,7 +11,7 @@ class ListaBasicaTest {
 
     @BeforeEach
     void setUp() {
-        lista = new ListaBasica<>();
+        lista = new ListaBasica<>(1);
     }
 
     @Test

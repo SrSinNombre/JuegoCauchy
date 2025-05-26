@@ -1,9 +1,8 @@
 package EstructurasDeDatos.diccionario;
 
+import EstructurasDeDatos.Iterador;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.Iterator;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -52,11 +51,11 @@ class DiccionarioBasicoTest {
 
     @Test
     void getIterador() {
-        Iterator<String> iter = diccionario.getIterador();
+        Iterador<Diccionario<String, Integer>> iter = diccionario.getIterador();
         assertNotNull(iter);
         int contador = 0;
         while (iter.hasNext()) {
-            String clave = iter.next();
+            String clave = iter.next().getClave();
             assertTrue(diccionario.hasKey(clave));
             contador++;
         }
@@ -79,7 +78,7 @@ class DiccionarioBasicoTest {
 
     @Test
     void buscar() {
-        Integer valor = diccionario.buscar("tres");
-        assertEquals(3, valor);
+        String valor = diccionario.buscar(3);
+        assertEquals("tres", valor);
     }
 }

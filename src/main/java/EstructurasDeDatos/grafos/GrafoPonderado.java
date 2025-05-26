@@ -22,9 +22,6 @@ public class GrafoPonderado<T> {
     public DiccionarioBasico<ListaBasica<Vertice<T>>, Integer> getAristasTotales() {
         return aristasTotales;
     }
-    public void setAristasTotales(DiccionarioBasico<ListaBasica<Vertice<T>>, Integer> aristasTotales) {
-        this.aristasTotales = aristasTotales;
-    }
 
     public boolean addArista(Vertice<T> v1, Vertice<T> v2, int pesoArista){
         ListaBasica<Vertice<T>> parejaVertices = new ListaBasica<>(2);

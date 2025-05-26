@@ -1,9 +1,10 @@
 package EstructurasDeDatos.arbolBinarioDeBusqueda;
 
+import EstructurasDeDatos.lista.ListaBasica;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -33,14 +34,21 @@ class ArbolBinarioDeBusquedaTest {
 
     @Test
     void getListaDatosNivel() {
-        List<Integer> nivel1 = arbol.getListaDatosNivel(1);
-        assertEquals(List.of(5, 15), nivel1);
+        ListaBasica<Integer> nivel1 = arbol.getListaDatosNivel(1);
+        ListaBasica<Integer> expectedlist = new ListaBasica<>(1);
+        expectedlist.add(5);
+        expectedlist.add(15);
+        assertEquals(expectedlist, nivel1);
     }
 
     @Test
     void getCamino() {
-        List<Integer> camino = arbol.getCamino(7);
-        assertEquals(List.of(10, 5, 7), camino);
+        ListaBasica<Integer> camino = arbol.getCamino(7);
+        ListaBasica<Integer> expectedlist = new ListaBasica<>(1);
+        expectedlist.add(10);
+        expectedlist.add(5);
+        expectedlist.add(7);
+        assertEquals(expectedlist, camino);
     }
 
     @Test
@@ -61,34 +69,49 @@ class ArbolBinarioDeBusquedaTest {
     @Test
     void add() {
         arbol.add(20);
-        assertEquals(20, arbol.getSubArbolDerecha().getSubArbolDerecha().getDato());
+        assertEquals(20, arbol.getSubArbolDerecha().getSubArbolDerecha().getRaiz().getDato());
     }
 
     @Test
     void getSubArbolIzquierda() {
-        assertEquals(5, arbol.getSubArbolIzquierda().getDato());
+        assertEquals(5, arbol.getSubArbolIzquierda().getRaiz().getDato());
     }
 
     @Test
     void getSubArbolDerecha() {
-        assertEquals(15, arbol.getSubArbolDerecha().getDato());
+        assertEquals(15, arbol.getSubArbolDerecha().getRaiz().getDato());
     }
 
     @Test
     void getListaPreOrden() {
-        List<Integer> esperado = List.of(10, 5, 3, 7, 15);
+        ListaBasica<Integer> esperado = new ListaBasica<>(1);
+        esperado.add(10);
+        esperado.add(5);
+        esperado.add(3);
+        esperado.add(7);
+        esperado.add(15);
         assertEquals(esperado, arbol.getListaPreOrden());
     }
 
     @Test
     void getListaPostOrden() {
-        List<Integer> esperado = List.of(3, 7, 5, 15, 10);
+        ListaBasica<Integer> esperado = new ListaBasica<>(1);
+        esperado.add(3);
+        esperado.add(7);
+        esperado.add(5);
+        esperado.add(10);
+        esperado.add(15);
         assertEquals(esperado, arbol.getListaPostOrden());
     }
 
     @Test
     void getListaOrdenCentral() {
-        List<Integer> esperado = List.of(3, 5, 7, 10, 15);
+        ListaBasica<Integer> esperado =new ListaBasica<>(1);
+        esperado.add(3);
+        esperado.add(5);
+        esperado.add(7);
+        esperado.add(10);
+        esperado.add(15);
         assertEquals(esperado, arbol.getListaOrdenCentral());
     }
 }

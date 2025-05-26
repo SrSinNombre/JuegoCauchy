@@ -1,5 +1,6 @@
 package EstructurasDeDatos.lista;
 
+import EstructurasDeDatos.Iterador;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -8,15 +9,15 @@ import static org.junit.jupiter.api.Assertions.*;
 class IteradorListaBasicaTest {
 
     private ListaBasica<Integer> lista;
-    private IteradorListaBasica<Integer> iterador;
+    private Iterador<Integer> iterador;
 
     @BeforeEach
     void setUp() {
-        lista = new ListaBasica<>();
-        lista.agregar(1);
-        lista.agregar(2);
-        lista.agregar(3);
-        iterador = lista.iterador();
+        lista = new ListaBasica<>(1);
+        lista.add(1);
+        lista.add(2);
+        lista.add(3);
+        iterador = lista.getIterador();
     }
 
     @Test

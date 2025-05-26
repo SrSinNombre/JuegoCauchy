@@ -16,7 +16,7 @@ class IteradorListaDETest {
         lista.add(1);
         lista.add(2);
         lista.add(3);
-        iterador = lista.getIterador();
+        iterador = (IteradorListaDE<Integer>) lista.getIterador();
     }
 
     @Test
@@ -65,7 +65,7 @@ class IteradorListaDETest {
         // Eliminar primer elemento
         assertEquals(1, iterador.next());
         iterador.delete();
-        assertEquals(2, lista.get(0));
+        assertEquals(2, lista.getCabeza().getDato());
         assertEquals(2, iterador.next());
 
         // Eliminar último elemento
