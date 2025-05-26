@@ -18,7 +18,7 @@
     </Appenders>
     <Loggers>
         <!-- avoid duplicated logs with additivity=false -->
-        <Logger name="JuegoCauchy" level="info" additivity="false">
+        <Logger name="org.example.juegogui" level="info" additivity="false">
             <AppenderRef ref="LogToRollingFile"/>
             <AppenderRef ref="LogToConsole"/>
         </Logger>

@@ -1066,7 +1066,7 @@ public class PartidaControlador {
 
         partida.tablero[casillaAMoverse[0]][casillaAMoverse[1]] = partida.tablero[casillaOpcionRandom[0]][casillaOpcionRandom[1]];
         moverUnidad(opcionRandom, casillaAMoverse[0], casillaAMoverse[1]);
-        log.info("El {} ha elegido moverse a {},{}", partida.tablero[casillaOpcionRandom[0]][casillaOpcionRandom[1]].getNombre(), casillaAMoverse[0], casillaAMoverse[1]);
+        if(partida.tablero[casillaOpcionRandom[0]][casillaOpcionRandom[1]] != null) log.info("El {} ha elegido moverse a {},{}", partida.tablero[casillaOpcionRandom[0]][casillaOpcionRandom[1]].getNombre(), casillaAMoverse[0], casillaAMoverse[1]);
 
     }
 
