@@ -16,9 +16,34 @@
                <items>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0">
                      <children>
-                        <Label alignment="TOP_LEFT" contentDisplay="TOP" layoutX="8.0" layoutY="9.0" prefHeight="278.0" prefWidth="329.0" text="Descripción Unidades">
+                        <Label alignment="TOP_LEFT" contentDisplay="TOP" layoutX="8.0" layoutY="9.0" prefHeight="35.0" prefWidth="330.0" text="Descripción Unidades:">
                            <font>
                               <Font size="20.0" />
+                           </font>
+                        </Label>
+                        <Label alignment="TOP_LEFT" contentDisplay="TOP" layoutY="44.0" prefHeight="35.0" prefWidth="338.0" text="Matemático: 110HP, 50AT, 10DF, rgAT: 2, rgMV: 4">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <Label alignment="TOP_LEFT" contentDisplay="TOP" layoutY="79.0" prefHeight="35.0" prefWidth="338.0" text="Físico: 80HP, 50AT, 10DF, rgAT: 4, rgMV: 2">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <Label alignment="TOP_LEFT" contentDisplay="TOP" layoutY="114.0" prefHeight="35.0" prefWidth="338.0" text="Biólogo: 100HP, 25AT, 20DF, rgAT: 4, rgMV: 2">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <Label alignment="TOP_LEFT" contentDisplay="TOP" layoutY="149.0" prefHeight="35.0" prefWidth="338.0" text="Químico: 80HP, 50AT, 10DF, rgAT: 2, rgMV: 4">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <Label alignment="TOP_LEFT" contentDisplay="TOP" layoutY="184.0" prefHeight="35.0" prefWidth="338.0" text="Ingeniero: 150HP, 21AT, 20DF, rgAT: 1, rgMV: 1">
+                           <font>
+                              <Font size="14.0" />
                            </font>
                         </Label>
                      </children>

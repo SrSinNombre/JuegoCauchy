@@ -16,9 +16,34 @@
                <items>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0">
                      <children>
-                        <Label alignment="TOP_LEFT" contentDisplay="TOP" layoutX="8.0" layoutY="9.0" prefHeight="278.0" prefWidth="329.0" text="Descripción Unidades">
+                        <Label alignment="TOP_LEFT" contentDisplay="TOP" layoutX="8.0" layoutY="9.0" prefHeight="30.0" prefWidth="330.0" text="Descripción Unidades">
                            <font>
                               <Font size="20.0" />
+                           </font>
+                        </Label>
+                        <Label alignment="TOP_LEFT" contentDisplay="TOP" layoutY="39.0" prefHeight="30.0" prefWidth="330.0" text="Historiador: 100HP, 20AT, 25DF, rgAT: 2, rgMV: 4">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <Label alignment="TOP_LEFT" contentDisplay="TOP" layoutY="69.0" prefHeight="30.0" prefWidth="330.0" text="Filólogo: 100HP, 25AT, 20DF, rgAT: 4, rgMV: 2">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <Label alignment="TOP_LEFT" contentDisplay="TOP" layoutY="99.0" prefHeight="30.0" prefWidth="330.0" text="Teólogo: 110HP, 50AT, 25DF, rgAT: 2, rgMV: 2">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <Label alignment="TOP_LEFT" contentDisplay="TOP" layoutY="131.0" prefHeight="30.0" prefWidth="330.0" text="Traductor: 80HP, 50AT, 10DF, rgAT: 4, rgMV: 2">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <Label alignment="TOP_LEFT" contentDisplay="TOP" layoutY="161.0" prefHeight="30.0" prefWidth="330.0" text="Filósofo: 150HP, 21AT, 20DF, rgAT: 1, rgMV: 1">
+                           <font>
+                              <Font size="14.0" />
                            </font>
                         </Label>
                      </children>
